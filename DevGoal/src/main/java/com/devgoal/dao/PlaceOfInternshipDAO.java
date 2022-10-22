@@ -421,6 +421,33 @@ public class PlaceOfInternshipDAO implements DAO<PlaceOfInternshipModel>{
 		return db.queryListWithPrepare(sql, data);
 	}
 	
+	public ArrayList<HashMap<String, Object>> queryPlaceOfInternshipNoSkill() {
+		
+		String sql = "SELECT    \n" +
+				"	place_of_internship.place_of_internship_id,    \n" +
+				"	place_of_internship.name,   \n" +
+				"	place_of_internship.address,    \n" +
+				"	place_of_internship.email,    \n" +
+				"	place_of_internship.phone,    \n" +
+				"	place_of_internship.recive_total,    \n" +
+				"	place_of_internship.time_reg,   \n" +
+				"	place_of_internship.status,   \n" +
+				"	place_of_internship.user_id,   \n" +
+				"								\n" +
+				" CASE place_of_internship.type    \n" +
+				"	WHEN 1 THEN 'ในประเทศ'    \n" +
+				"	WHEN 2 THEN 'ต่างประเทศ'    \n" +
+				" END type, \n" +
+				" 0 AS matching \n" +
+				"								\n" +
+				"FROM    \n" +
+				"	place_of_internship   \n" +
+				"WHERE place_of_internship.place_of_internship_id NOT IN (SELECT place_of_internship_skill.place_of_internship_id FROM place_of_internship_skill)\n" +
+				"GROUP BY place_of_internship.place_of_internship_id";
+		
+		return db.queryList(sql);
+	}
+	
 //	public ArrayList<HashMap<String, Object>> queryPlaceOfInternshipRole1MatchingByZone(String user_id, String[] zone_data) {
 //		
 //		String sub_sql = "";
@@ -573,6 +600,50 @@ public class PlaceOfInternshipDAO implements DAO<PlaceOfInternshipModel>{
 		
 		String[] data = {user_id};
 		return db.queryListWithPrepare(sql, data);
+	}
+	
+	public ArrayList<HashMap<String, Object>> queryPlaceOfInternshipNoSkillByZone(String[] zone_data) {
+		
+		String sub_sql = "";
+		
+		if(zone_data.length != 0) {
+			
+			sub_sql = "AND place_of_internship.address REGEXP '";
+			
+			for(int i = 0; i <zone_data.length; i++) {
+				
+				sub_sql += zone_data[i]+"|";
+				
+			}
+			
+			sub_sql = sub_sql.substring(0, sub_sql.length()-1);
+			sub_sql += "' \n";
+		}
+		
+		String sql = "SELECT    \n" +
+				"	place_of_internship.place_of_internship_id,    \n" +
+				"	place_of_internship.name,   \n" +
+				"	place_of_internship.address,    \n" +
+				"	place_of_internship.email,    \n" +
+				"	place_of_internship.phone,    \n" +
+				"	place_of_internship.recive_total,    \n" +
+				"	place_of_internship.time_reg,   \n" +
+				"	place_of_internship.status,   \n" +
+				"	place_of_internship.user_id,   \n" +
+				"								\n" +
+				" CASE place_of_internship.type    \n" +
+				"	WHEN 1 THEN 'ในประเทศ'    \n" +
+				"	WHEN 2 THEN 'ต่างประเทศ'    \n" +
+				" END type, \n" +
+				" 0 AS matching \n" +
+				"								\n" +
+				"FROM    \n" +
+				"	place_of_internship   \n" +
+				"WHERE place_of_internship.place_of_internship_id NOT IN (SELECT place_of_internship_skill.place_of_internship_id FROM place_of_internship_skill)\n " +
+				sub_sql+
+				"GROUP BY place_of_internship.place_of_internship_id";
+		
+		return db.queryList(sql);
 	}
 	
 	public ArrayList<HashMap<String, Object>> queryPlaceOfInternshipChoice(String user_id) {

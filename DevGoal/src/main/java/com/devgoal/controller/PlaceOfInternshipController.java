@@ -459,12 +459,14 @@ public void managementInternshipStatusByAdmin(HttpSession session, HttpServletRe
 		
 		ArrayList<HashMap<String, Object>> placeOfInternshipMatching = null;
 		ArrayList<HashMap<String, Object>> placeOfInternshipNoMatching = null;
+		ArrayList<HashMap<String, Object>> placeOfInternshipNoSkill = null;
 		JSONObject jsonObject = null;
 		
 		if(sessionStatus == 0 && session.getAttribute("role").toString().equals("1")) {
 			
 			placeOfInternshipMatching = new PlaceOfInternshipDAO().queryPlaceOfInternshipMatching(session.getAttribute("id").toString());
 			placeOfInternshipNoMatching = new PlaceOfInternshipDAO().queryPlaceOfInternshipNoMatching(session.getAttribute("id").toString());
+			placeOfInternshipNoSkill = new PlaceOfInternshipDAO().queryPlaceOfInternshipNoSkill();
 			
 			for(int i = 0; i < placeOfInternshipMatching.size(); i++) {
 				placeOfInternship.add(placeOfInternshipMatching.get(i));
@@ -472,6 +474,10 @@ public void managementInternshipStatusByAdmin(HttpSession session, HttpServletRe
 			
 			for(int i = 0; i < placeOfInternshipNoMatching.size(); i++) {
 				placeOfInternship.add(placeOfInternshipNoMatching.get(i));
+			}
+			
+			for(int i = 0; i < placeOfInternshipNoSkill.size(); i++) {
+				placeOfInternship.add(placeOfInternshipNoSkill.get(i));
 			}
 			
 			for(int i = 0; i < placeOfInternship.size(); i++) {
@@ -514,6 +520,7 @@ public void managementInternshipStatusByAdmin(HttpSession session, HttpServletRe
 		
 		ArrayList<HashMap<String, Object>> placeOfInternshipMatching = null;
 		ArrayList<HashMap<String, Object>> placeOfInternshipNoMatching = null;
+		ArrayList<HashMap<String, Object>> placeOfInternshipNoSkill = null;
 		JSONObject jsonObject = null;
 		String zone = request.getParameter("zone_value");
 		
@@ -530,6 +537,7 @@ public void managementInternshipStatusByAdmin(HttpSession session, HttpServletRe
 				
 				placeOfInternshipMatching = new PlaceOfInternshipDAO().queryPlaceOfInternshipMatchingByZone(session.getAttribute("id").toString(), zone_data);
 				placeOfInternshipNoMatching = new PlaceOfInternshipDAO().queryPlaceOfInternshipNoMatchingByZone(session.getAttribute("id").toString(), zone_data);
+				placeOfInternshipNoSkill = new PlaceOfInternshipDAO().queryPlaceOfInternshipNoSkillByZone(zone_data);
 				
 				for(int i = 0; i < placeOfInternshipMatching.size(); i++) {
 					placeOfInternship.add(placeOfInternshipMatching.get(i));
@@ -537,6 +545,10 @@ public void managementInternshipStatusByAdmin(HttpSession session, HttpServletRe
 				
 				for(int i = 0; i < placeOfInternshipNoMatching.size(); i++) {
 					placeOfInternship.add(placeOfInternshipNoMatching.get(i));
+				}
+				
+				for(int i = 0; i < placeOfInternshipNoSkill.size(); i++) {
+					placeOfInternship.add(placeOfInternshipNoSkill.get(i));
 				}
 				
 				for(int i = 0; i < placeOfInternship.size(); i++) {

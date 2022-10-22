@@ -200,6 +200,33 @@ public class OverseasWorkPlaceDAO implements DAO<OverseasWorkPlaceModel>{
 		return db.queryListWithPrepare(sql, data);
 	}
 	
+	public ArrayList<HashMap<String, Object>> queryOverseasWorkPlaceNoSkill() {
+		
+		String sql = "SELECT    \n" +
+				"	overseas_work_place.overseas_work_place_id,    \n" +
+				"	overseas_work_place.name,   \n" +
+				"	overseas_work_place.address,    \n" +
+				"	overseas_work_place.email,    \n" +
+				"	overseas_work_place.phone,    \n" +
+				"	overseas_work_place.recive_total,    \n" +
+				"	overseas_work_place.time_reg,   \n" +
+				"	overseas_work_place.status,   \n" +
+				"	overseas_work_place.user_id,   \n" +
+				"								\n" +
+				" CASE overseas_work_place.type    \n" +
+				"	WHEN 1 THEN 'ในประเทศ'    \n" +
+				"	WHEN 2 THEN 'ต่างประเทศ'    \n" +
+				" END type, \n" +
+				" 0 AS matching \n" +
+				"								\n" +
+				"FROM    \n" +
+				"	overseas_work_place   \n" +
+				"WHERE overseas_work_place.overseas_work_place_id NOT IN (SELECT overseas_work_place_skill.overseas_work_place_id FROM overseas_work_place_skill)\n" +
+				"GROUP BY overseas_work_place.overseas_work_place_id";
+		
+		return db.queryList(sql);
+	}
+	
 	
 	public int insertOverseasWorkPlace(String user_id, String name, String address, String email, String phone, String recive_total, String type) {
 		
@@ -423,6 +450,50 @@ public class OverseasWorkPlaceDAO implements DAO<OverseasWorkPlaceModel>{
 		
 		String[] data = {user_id};
 		return db.queryListWithPrepare(sql, data);
+	}
+	
+	public ArrayList<HashMap<String, Object>> queryOverseasWorkPlaceNoSkillByZone(String[] zone_data) {
+		
+		String sub_sql = "";
+		
+		if(zone_data.length != 0) {
+			
+			sub_sql = "AND overseas_work_place.address REGEXP '";
+			
+			for(int i = 0; i <zone_data.length; i++) {
+				
+				sub_sql += zone_data[i]+"|";
+				
+			}
+			
+			sub_sql = sub_sql.substring(0, sub_sql.length()-1);
+			sub_sql += "' \n";
+		}
+		
+		String sql = "SELECT    \n" +
+				"	overseas_work_place.overseas_work_place_id,    \n" +
+				"	overseas_work_place.name,   \n" +
+				"	overseas_work_place.address,    \n" +
+				"	overseas_work_place.email,    \n" +
+				"	overseas_work_place.phone,    \n" +
+				"	overseas_work_place.recive_total,    \n" +
+				"	overseas_work_place.time_reg,   \n" +
+				"	overseas_work_place.status,   \n" +
+				"	overseas_work_place.user_id,   \n" +
+				"								\n" +
+				" CASE overseas_work_place.type    \n" +
+				"	WHEN 1 THEN 'ในประเทศ'    \n" +
+				"	WHEN 2 THEN 'ต่างประเทศ'    \n" +
+				" END type, \n" +
+				" 0 AS matching \n" +
+				"								\n" +
+				"FROM    \n" +
+				"	overseas_work_place   \n" +
+				"WHERE overseas_work_place.overseas_work_place_id NOT IN (SELECT overseas_work_place_skill.overseas_work_place_id FROM overseas_work_place_skill)\n " +
+				sub_sql+
+				"GROUP BY overseas_work_place.overseas_work_place_id";
+		
+		return db.queryList(sql);
 	}
 	
 	

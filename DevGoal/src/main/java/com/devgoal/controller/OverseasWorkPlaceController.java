@@ -420,6 +420,7 @@ public class OverseasWorkPlaceController {
 		
 		ArrayList<HashMap<String, Object>> overseasWorkPlaceMatching = null;
 		ArrayList<HashMap<String, Object>> overseasWorkPlaceNoMatching = null;
+		ArrayList<HashMap<String, Object>> overseasWorkPlaceNoSkill = null;
 		
 		JSONObject jsonObject = null;
 		
@@ -427,6 +428,7 @@ public class OverseasWorkPlaceController {
 			
 			overseasWorkPlaceMatching = new OverseasWorkPlaceDAO().queryOverseasWorkPlaceMatching(session.getAttribute("id").toString());
 			overseasWorkPlaceNoMatching = new OverseasWorkPlaceDAO().queryOverseasWorkPlaceNoMatching(session.getAttribute("id").toString());
+			overseasWorkPlaceNoSkill = new OverseasWorkPlaceDAO().queryOverseasWorkPlaceNoSkill();
 			
 			for(int i = 0; i < overseasWorkPlaceMatching.size(); i++) {
 				overseasWorkPlace.add(overseasWorkPlaceMatching.get(i));
@@ -434,6 +436,10 @@ public class OverseasWorkPlaceController {
 			
 			for(int i = 0; i < overseasWorkPlaceNoMatching.size(); i++) {
 				overseasWorkPlace.add(overseasWorkPlaceNoMatching.get(i));
+			}
+			
+			for(int i = 0; i < overseasWorkPlaceNoSkill.size(); i++) {
+				overseasWorkPlace.add(overseasWorkPlaceNoSkill.get(i));
 			}
 			
 			for(int i = 0; i < overseasWorkPlace.size(); i++) {
@@ -476,6 +482,8 @@ public class OverseasWorkPlaceController {
 		
 		ArrayList<HashMap<String, Object>> overseasWorkPlaceMatching = null;
 		ArrayList<HashMap<String, Object>> overseasWorkPlaceNoMatching = null;
+		ArrayList<HashMap<String, Object>> overseasWorkPlaceNoSkill = null;
+		
 		JSONObject jsonObject = null;
 		String zone = request.getParameter("zone_value");
 		
@@ -492,6 +500,7 @@ public class OverseasWorkPlaceController {
 				
 				overseasWorkPlaceMatching = new OverseasWorkPlaceDAO().queryOverseasWorkPlaceMatchingByZone(session.getAttribute("id").toString(), zone_data);
 				overseasWorkPlaceNoMatching = new OverseasWorkPlaceDAO().queryOverseasWorkPlaceNoMatchingByZone(session.getAttribute("id").toString(), zone_data);
+				overseasWorkPlaceNoSkill = new OverseasWorkPlaceDAO().queryOverseasWorkPlaceNoSkillByZone(zone_data);
 				
 				for(int i = 0; i < overseasWorkPlaceMatching.size(); i++) {
 					overseasWorkPlace.add(overseasWorkPlaceMatching.get(i));
@@ -499,6 +508,10 @@ public class OverseasWorkPlaceController {
 
 				for(int i = 0; i < overseasWorkPlaceNoMatching.size(); i++) {
 					overseasWorkPlace.add(overseasWorkPlaceNoMatching.get(i));
+				}
+				
+				for(int i = 0; i < overseasWorkPlaceNoSkill.size(); i++) {
+					overseasWorkPlace.add(overseasWorkPlaceNoSkill.get(i));
 				}
 				
 				for(int i = 0; i < overseasWorkPlace.size(); i++) {
