@@ -132,7 +132,7 @@ function Send() {
 				    timer: 3000
 				    })
 				    .then(() => {
-				      window.close()
+				    	window.location.replace("login")
 				    })
 				  
 				} else if(response.data.alert == "0"){
