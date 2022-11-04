@@ -164,9 +164,6 @@ public class TermController {
 					
 					new EventHistoryDAO().insertEventHistory(user_id, "แก้ไขข้อมูลเทอมรหัส "+ term_id, ip);
 				}
-					
-				
-				
 				
 			}
 			
