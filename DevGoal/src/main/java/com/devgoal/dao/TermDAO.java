@@ -26,7 +26,8 @@ public class TermDAO implements DAO<TermModel> {
 				"		WHEN 2 THEN 'รอการตรวจสอบ'\n" +
 				"	END AS status\n" +
 				"	\n" +
-				"FROM term";
+				"FROM term\n"+
+				"ORDER BY year DESC, term_no DESC";
 		
 		return db.queryList(sql);
 	}
@@ -46,6 +47,14 @@ public class TermDAO implements DAO<TermModel> {
 		String[] lastId = {"term_id"};
 		
 		return db.executeReturnLastId(sql, data, lastId);
+	}
+	
+	public int updateTerm(String year, String term, String begin_date, String end_date, String term_id) {
+		
+		String sql = "UPDATE term SET year = ?, term_no = ?, begin_date = ?, end_date = ? WHERE term_id = ?";
+		String[] data = {year, term, begin_date, end_date, term_id};
+		
+		return db.execute(sql, data);
 	}
 
 	@Override

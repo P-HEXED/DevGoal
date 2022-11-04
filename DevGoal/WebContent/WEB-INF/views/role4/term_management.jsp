@@ -71,17 +71,17 @@
 							</div>
 							<hr>
 							<div class="row">
-								
+
 								<div class="col-lg-2 col-sm-12 col-md-6">
 									<input type="text" class="form-control" id="input_from"
 										placeholder="วันเปิดเทอม">
 								</div>
-								
+
 								<div class="col-lg-2 col-sm-12 col-md-6">
 									<input type="text" class="form-control" id="input_to"
 										placeholder="วันปิดเทอม">
 								</div>
-								
+
 							</div>
 
 							<form>
@@ -141,43 +141,76 @@
 					class="modal-dialog modal-xl modal-fullscreen-lg-down modal-dialog-centered">
 					<div class="modal-content" id="update">
 						<div class="modal-header">
-							<h5 class="modal-title">แก้ไขข้อมูลทักษะความสามารถด้านโปรแกรมมิ่ง</h5>
+							<h5 class="modal-title">แก้ไขข้อมูลเทอม</h5>
 						</div>
 						<div class="modal-body">
 							<div class="row">
-								<div class="col-lg-12">
-									<form>
-										<div class="row">
 
-											<div class="col-sm-12 col-md-6 col-lg-4">
-												<div class="form-floating ">
-													<input type="text" class="form-control" id="detailModal"
-														placeholder="ทักษะความสามารถด้านโปรแกรมมิ่ง"
-														name="detailModal"> <label for="name">ทักษะความสามารถด้านโปรแกรมมิ่ง</label>
-												</div>
-											</div>
-
-											<div class="col-sm-12 col-md-6 col-lg-3">
-												<div class="form-floating ">
-													<input type="text" class="form-control" id="statusModal"
-														placeholder="สถานะ" name="statusModal" disabled> <label
-														for="initial">สถานะ</label>
-												</div>
-											</div>
-
-											<div class="col-sm-12 col-md-6 col-lg-3">
-												<div class="form-floating ">
-													<input type="text" class="form-control" id="emailModal"
-														placeholder="เวลาที่บันทึก" name="emailModal" disabled>
-													<label for="initial">เวลาที่บันทึก</label>
-												</div>
-											</div>
-											<input type="hidden" id="skillIdModal">
-
-										</div>
-									</form>
+								<div class="col-sm-12 col-md-6 col-lg-2">
+									<select class="form-select" id="updateYear">
+										<option value="0">ปีการศึกษา</option>
+									</select>
 								</div>
+
+								<div class="col-sm-12 col-md-6 col-lg-2">
+									<select class="form-select" id="updateTermNo">
+										<option value="0">เทอม</option>
+										<option value="1">เทอม 1</option>
+										<option value="2">เทอม 2</option>
+										<option value="3">เทอม 3</option>
+									</select>
+								</div>
+
 							</div>
+							<br>
+							<div class="row">
+
+								<div class="col-lg-3 col-sm-12 col-md-6">
+									<div class="form-floating ">
+										<input type="text" class="form-control"
+											id="current_begin_date"
+											placeholder="วันเปิดเทอม(ข้อมูลปัจุบัน)" disabled> <label
+											for="name">วันเปิดเทอม(ข้อมูลปัจุบัน)</label>
+									</div>
+								</div>
+
+								<div class="col-lg-3 col-sm-12 col-md-6">
+									<div class="form-floating ">
+										<input type="text" class="form-control" id="current_end_date"
+											placeholder="วันปิดเทอม(ข้อมูลปัจุบัน)" disabled> <label
+											for="name">วันปิดเทอม(ข้อมูลปัจุบัน)</label>
+									</div>
+								</div>
+
+							</div>
+							<br>
+							<div class="row">
+
+								<div class="col-lg-2 col-sm-12 col-md-6">
+									<input type="text" class="form-control" id="input_from2"
+										placeholder="วันเปิดเทอม(ใหม่)">
+								</div>
+
+								<div class="col-lg-2 col-sm-12 col-md-6">
+									<input type="text" class="form-control" id="input_to2"
+										placeholder="วันปิดเทอม(ใหม่)">
+								</div>
+
+							</div>
+							<br>
+							<div class="row">
+								<form>
+									<div class="col-sm-12 col-md-3 col-lg-2">
+										<div class="form-floating ">
+											<input type="text" class="form-control" id="updateStatus"
+												placeholder="สถานะ" name="name" disabled> <label
+												for="name">สถานะ</label>
+										</div>
+									</div>
+									<input type="hidden" id="updateTermId">
+								</form>
+							</div>
+
 							<div class="modal-footer">
 								<button type="button" onClick="updatePlaceOfInternship()"
 									class="btn btn-primary">บันทึก</button>
@@ -273,7 +306,9 @@ $(function() {
 				    document.getElementById("internshipTable").appendChild(newRow)
             });
            
-			$('#internshipDataTable').DataTable();
+			$('#internshipDataTable').dataTable( {
+				"aaSorting": []
+			}); 
 		  })
 		  .catch(function (response) {
 			Swal.fire({
@@ -291,38 +326,98 @@ $(function() {
 	for(var i = 0; i < 10; i++) {
 		
          $('#insertYear').append($('<option value="' + (year-i) + '">' + (year-i) + '</option>'));
+         $('#updateYear').append($('<option value="' + (year-i) + '">' + (year-i) + '</option>'));
 	}
 	
 	
 	});
 	
-	function ShowInternshipModal(detail, status, time_reg, skill_id) {
-
-		document.getElementById('detailModal').value = detail
-		document.getElementById('statusModal').value = status
-		document.getElementById('emailModal').value = time_reg
-		document.getElementById('skillIdModal').value = skill_id
+	function ShowInternshipModal(term_id, year, term_no, begin_date, end_date, status) {
+	
+		$("#updateYear").val(year).change();
+		$("#updateTermNo").val(term_no).change();
+		
+		document.getElementById('updateStatus').value = status
+		document.getElementById('updateTermId').value = term_id
+		document.getElementById('current_begin_date').value = begin_date
+		document.getElementById('current_end_date').value = end_date
 		
 		
 	}
 	
-	function updatePlaceOfInternship() {
+	var begin_date_update_change_status = ''
+	var end_date_update_change_status = ''
+	
+	$('#input_from2').change(async function() {
+		
+		document.getElementById('current_begin_date').value = document.getElementById('input_from2').value
+		
+		if(document.getElementById('input_to2').value == '') {
+			
+			document.getElementById('current_end_date').value = ''
+		}
+		
+		begin_date_update_change_status = '1'
+		
+	});
+	
+	$('#input_to2').change(async function() {
+		
+		document.getElementById('current_end_date').value = document.getElementById('input_to2').value
+		
+		if(document.getElementById('input_from2').value == '') {
+			
+			document.getElementById('current_begin_date').value = ''
+		}
+		
+		end_date_update_change_status = '1'
+		
+	});
+	
+	
+	async function updatePlaceOfInternship() {
 		
 		document.getElementById('spinner1').style.display = 'block';
 		$(':button').prop('disabled', true);
 		
+		var begin_date = document.getElementById('current_begin_date').value
+		var end_date = document.getElementById('current_end_date').value
+		
+		var date = new Date(); 
+		
+		var h = date.getHours()
+		var m = date.getMinutes()
+		var s = date.getSeconds()
+		
+		var time = h+":"+m+":"+s
+		
+		if(begin_date_update_change_status != '') {
+			
+			begin_date = await setFormatDate(begin_date)
+			
+			begin_date += " "+time
+		}
+		
+		if(end_date_update_change_status != '') {
+			
+			end_date = await setFormatDate(end_date)
+			
+			end_date +=" "+time
+		}
+		
 		const data = $.getJSON('https://api.ipify.org?format=json', function(data){
 			
-			skill_id = document.getElementById('skillIdModal').value
-			skill = document.getElementById('detailModal').value
-			ip = data.ip
+			var year = document.getElementById('updateYear').value
+			var term = document.getElementById('updateTermNo').value
+			var term_id = document.getElementById('updateTermId').value
+			var ip = data.ip
 			
-			if(skill_id != '' && skill != '' && ip != '') {
+			if(begin_date != '' && end_date != '' && year != '' && term != '' && term_id != '' && ip != '' && year != '0' && term != '0') {
 				
 				axios({
 					  method: "post",
-					  url: "skillUpdate",
-					  data: "skill_id="+skill_id+"&skill="+skill+"&ip="+ip,
+					  url: "termUpdate",
+					  data: "begin_date="+begin_date+"&end_date="+end_date+"&year="+year+"&term="+term+"&term_id="+term_id+"&ip="+ip,
 					}).then(function (response) {
 						
 						if(response.data.alert == "1") {
@@ -389,12 +484,9 @@ $(function() {
 	var b = ''
 	var e = ''
 	
-	async function setFormat() {
+	async function setFormat(begin, end) {
 		
 		const monthENG = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-		
-		var begin = document.getElementById('input_from').value
-		var end = document.getElementById('input_to').value
 		
 		const beginArray = begin.split(" ");
 		const endArray = end.split(" ");
@@ -465,7 +557,14 @@ $(function() {
 	
 	async function insertPlaceOfInternship() {
 		
-		await setFormat()
+		var begin = document.getElementById('input_from').value
+		var end = document.getElementById('input_to').value
+		
+		if(begin != '' && end != '') {
+			await setFormat(begin, end)
+		}
+		
+		
 		
 		document.getElementById('spinner').style.display = 'block';
 		$(':button').prop('disabled', true);
@@ -474,8 +573,6 @@ $(function() {
 			
 			var year = document.getElementById('insertYear').value
 			var term = document.getElementById('insertTermNo').value
-			var begin = document.getElementById('input_from').value
-			var end = document.getElementById('input_to').value
 			
 			var date = new Date(); 
 			
@@ -644,4 +741,60 @@ $(function() {
 			
 
 			}
+	
+	async function setFormatDate(date) {
+		
+		const monthENG = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+		
+		const beginArray = date.split(" ");
+		
+		var begin_day = beginArray[0]
+		
+		var begin_year = beginArray[2]
+		
+		if(begin_day < 10) {
+			begin_day = '0'+ begin_day
+		}
+		
+		
+		if(beginArray[1] != undefined) {
+					
+			var month = await setFormatDateStringToIndex(beginArray[1].replace(",", ""), monthENG)
+			
+			return dateNewFormat = begin_year +'-'+ month +'-'+ begin_day
+			
+		} else {
+			
+			Swal.fire({
+				icon: 'warning',
+				title: 'กรุณาเลือกวันที่',
+				showConfirmButton: false,
+				timer: 3000
+			})
+			
+			$(':button').prop('disabled', false);
+			document.getElementById('spinner').style.display = 'none';
+		}
+
+		
+		
+	}
+	
+	function setFormatDateStringToIndex(begin_month, monthENG) {
+		
+		for(var i = 0; i < monthENG.length; i++) {
+					
+				if(begin_month == monthENG[i]) {
+					begin_month = i+1
+					
+					if(begin_month < 10) {
+						begin_month = '0'+ begin_month
+					}
+				}
+				
+				
+		}
+		
+		return begin_month
+	}
 </script>

@@ -129,5 +129,55 @@ public class TermController {
 		new EtcMethods().responseJSONObject(jsonObject, response);
 		
 	}
+	
+	@RequestMapping(value = "/termUpdate", method = RequestMethod.POST)
+	@ResponseBody
+	public void termUpdate(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws JSONException, IOException {
+		response.setContentType("text/html;charset=UTF-8");
+		request.setCharacterEncoding("UTF-8");
+		
+		session = request.getSession(false);
+		int sessionStatus = new EtcMethods().checkSession(session, request);
+		String status = "เกิดข้อผิดพลาด กรุณาดำเนินการใหม่ภายหลัง";
+		String alert = "0";
+		
+		if(sessionStatus == 0 && session.getAttribute("role").toString().equals("4")) {
+			
+			String year = request.getParameter("year");
+			String term = request.getParameter("term");
+			String term_id = request.getParameter("term_id");
+			String begin_date = request.getParameter("begin_date");
+			String end_date = request.getParameter("end_date");
+			String ip = request.getParameter("ip");
+			
+			String user_id = session.getAttribute("id").toString();
+			
+			if(year != null && !year.equals("") && !year.equals("0") && term != null && !term.equals("") && !term.equals("0") && begin_date != null && !begin_date.equals("") && end_date != null && !end_date.equals("") && ip != null && !ip.equals("") && term_id != null && !term_id.equals("")) {
+				
+					
+				int updateStatus = new TermDAO().updateTerm(year, term, begin_date, end_date, term_id);
+				
+				if(updateStatus != -1) {
+					
+					status = "แก้ไขข้อมูลเรียบร้อย";
+					alert = "1";
+					
+					new EventHistoryDAO().insertEventHistory(user_id, "แก้ไขข้อมูลเทอมรหัส "+ term_id, ip);
+				}
+					
+				
+				
+				
+			}
+			
+		}
+		
+		JSONObject jsonObject = new JSONObject();
+		
+		jsonObject.put("status", status);
+		jsonObject.put("alert", alert);
+		new EtcMethods().responseJSONObject(jsonObject, response);
+		
+	}
 
 }
