@@ -661,7 +661,7 @@ $(function() {
 		
 	
 	
-	function manegementStatus(skill_id, status) {
+	function manegementStatus(term_id, status) {
 		
 		document.getElementById('spinner2').style.display = 'block';
 		$(':button').prop('disabled', true);
@@ -670,12 +670,12 @@ $(function() {
 				
 			ip = data.ip
 				
-			if(skill_id != '') {
+			if(term_id != '') {
 					
 				axios({
 					  method: "post",
-					  url: "skillUpdateStatus",
-					  data: 'skill_id=' + skill_id +'&status=' +status +'&ip='+ip,
+					  url: "termUpdateStatus",
+					  data: 'term_id=' + term_id +'&status=' +status +'&ip='+ip,
 					}).then(function (response) {
 						
 						if(response.data.alert == "1") {
@@ -729,7 +729,7 @@ $(function() {
 				} else {
 					Swal.fire({
 					  icon: 'warning',
-					  title: 'กรุณาเลือกทักษะความสารถ',
+					  title: 'กรุณาเลือกเทอม',
 					  showConfirmButton: false,
 					  timer: 3000
 					})

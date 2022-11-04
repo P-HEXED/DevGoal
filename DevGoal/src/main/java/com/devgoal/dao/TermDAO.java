@@ -32,6 +32,14 @@ public class TermDAO implements DAO<TermModel> {
 		return db.queryList(sql);
 	}
 	
+	public int updateStatusTerm(String status, String term_id) {
+		
+		String sql = "UPDATE term SET status = ? WHERE term_id = ?";
+		String[] data = {status, term_id};
+		
+		return db.execute(sql, data);
+	}
+	
 	public HashMap<String, Object> checkDuplicateterm(String year, String term) {
 		
 		String sql = "SELECT term_id FROM term WHERE year = ? AND term_no = ? LIMIT 1";

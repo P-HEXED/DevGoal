@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.devgoal.dao.EventHistoryDAO;
+import com.devgoal.dao.SkillDAO;
 import com.devgoal.dao.TermDAO;
 
 @Controller
@@ -163,6 +164,48 @@ public class TermController {
 					alert = "1";
 					
 					new EventHistoryDAO().insertEventHistory(user_id, "แก้ไขข้อมูลเทอมรหัส "+ term_id, ip);
+				}
+				
+			}
+			
+		}
+		
+		JSONObject jsonObject = new JSONObject();
+		
+		jsonObject.put("status", status);
+		jsonObject.put("alert", alert);
+		new EtcMethods().responseJSONObject(jsonObject, response);
+		
+	}
+	
+	@RequestMapping(value = "/termUpdateStatus", method = RequestMethod.POST)
+	@ResponseBody
+	public void termUpdateStatus(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws JSONException, IOException {
+		response.setContentType("text/html;charset=UTF-8");
+		request.setCharacterEncoding("UTF-8");
+		
+		session = request.getSession(false);
+		int sessionStatus = new EtcMethods().checkSession(session, request);
+		String status = "เกิดข้อผิดพลาด กรุณาดำเนินการใหม่ภายหลัง";
+		String alert = "0";
+		
+		if(sessionStatus == 0 && session.getAttribute("role").toString().equals("4")) {
+			
+			String term_id = request.getParameter("term_id");
+			String ip = request.getParameter("ip");
+			String term_status = request.getParameter("status");	
+			
+			String user_id = session.getAttribute("id").toString();
+			
+			if(term_status != null && !term_status.equals("") && term_id != null && ip != null && !term_id.equals("") && !ip.equals("")) {
+				
+				if(new TermDAO().updateStatusTerm(term_status, term_id) != -1) {
+					
+					status = "อัปเดทสถานะเทอมสำเร็จ";
+					alert = "1";
+					String detail_event = (term_status.equals("1"))? "ยืนยันข้อมูลเทอมรหัส "+ term_id: "ยกเลิกการยืนยันข้อมูลเทอมรหัส "+term_id;
+					
+					new EventHistoryDAO().insertEventHistory(user_id, detail_event, ip);
 				}
 				
 			}
