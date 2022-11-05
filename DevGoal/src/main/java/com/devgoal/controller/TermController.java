@@ -219,5 +219,57 @@ public class TermController {
 		new EtcMethods().responseJSONObject(jsonObject, response);
 		
 	}
+	
+	@RequestMapping(value = "/findYearOfTerm", method = RequestMethod.POST)
+	@ResponseBody
+	public void findYearOfTerm(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws JSONException, IOException {
+		response.setContentType("text/html;charset=UTF-8");
+		request.setCharacterEncoding("UTF-8");
+		
+		JSONArray jsonArray = new JSONArray();
+			
+		ArrayList<HashMap<String, Object>> term = new TermDAO().queryYearOfTerm();
+		
+		JSONObject jsonObject = null;
+		
+		for(int i = 0; i < term.size(); i++) {
+			jsonObject = new JSONObject();
+			jsonObject.put("year", term.get(i).get("year"));
+			
+			jsonArray.put(jsonObject);
+		}
+		
+	new EtcMethods().responseJSONArray(jsonArray, response);
+		
+		
+	}
+	
+	@RequestMapping(value = "/findTermByYear", method = RequestMethod.POST)
+	@ResponseBody
+	public void findTermByYear(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws JSONException, IOException {
+		response.setContentType("text/html;charset=UTF-8");
+		request.setCharacterEncoding("UTF-8");
+		
+		String year = request.getParameter("year");
+		JSONArray jsonArray = new JSONArray();
+		
+		if(year != null && !year.equals("") && !year.equals("0")) {
+			
+			ArrayList<HashMap<String, Object>> term = new TermDAO().queryTermByYear(year);
+			
+			JSONObject jsonObject = null;
+			
+			for(int i = 0; i < term.size(); i++) {
+				jsonObject = new JSONObject();
+				jsonObject.put("term_no", term.get(i).get("term_no"));
+				
+				jsonArray.put(jsonObject);
+			}
+		}
+		
+	new EtcMethods().responseJSONArray(jsonArray, response);
+		
+		
+	}
 
 }

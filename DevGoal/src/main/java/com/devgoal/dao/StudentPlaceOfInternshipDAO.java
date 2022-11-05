@@ -11,10 +11,10 @@ public class StudentPlaceOfInternshipDAO implements DAO<StudentPlaceOfInternship
 	
 	Database db = new Database();
 	
-	public int insertInternshipAndUser(String user_id, String internship_id, String condition) {
+	public int insertInternshipAndUser(String user_id, String internship_id, String condition, String term_id) {
 		
-		String sql = "INSERT INTO student_place_of_internship(user_id, place_of_internship_id, student_place_of_internship.condition) VALUES(?, ?, ?)";
-		String[] data = {user_id, internship_id, condition};
+		String sql = "INSERT INTO student_place_of_internship(user_id, place_of_internship_id, student_place_of_internship.condition, term_id) VALUES(?, ?, ?, ?)";
+		String[] data = {user_id, internship_id, condition, term_id};
 		
 		return db.execute(sql, data);
 	}
@@ -29,43 +29,45 @@ public class StudentPlaceOfInternshipDAO implements DAO<StudentPlaceOfInternship
 	
 	public ArrayList<HashMap<String, Object>> queryUserDataRequest(String user_id) {
 		
-		String sql = "SELECT   \n" +
-					"	user.user_id AS user_id,   \n" +
-					"	user.firstname AS firstname,   \n" +
-					"	user.lastname AS lastname,   \n" +
-					"	user.address AS address,   \n" +
-					"	user.email AS email,   \n" +
-					"	user.phone AS phone,   \n" +
-					"	user.profile_image AS profile_image,   \n" +
-					"	user.birthday AS birthday,  \n" +
-					"	university.name AS university_name,   \n" +
-					"	faculty.name AS faculty_name,   \n" +
-					"	course.name AS course_name,   \n" +
-					"	 \n" +
-					"	student_place_of_internship.student_place_of_internship_id AS student_place_of_internship_id,   \n" +
-					"	student_place_of_internship.time_reg AS time_reg,   \n" +
-					"	student_place_of_internship.status AS status,   \n" +
-					"	place_of_internship.name AS internship_name, \n" +
-					"	 \n" +
-					"						 \n" +
-					"CASE user.gender   \n" +
-					"	WHEN 1 THEN 'ชาย'   \n" +
-					"	WHEN 2 THEN 'หญิง'   \n" +
-					"END gender, \n" +
-					"CASE student_place_of_internship.status   \n" +
-					"	WHEN 0 THEN 'ไม่ผ่านการยืนยัน'   \n" +
-					"	WHEN 1 THEN 'ผ่านการยืนยัน'   \n" +
-					"	WHEN 2 THEN 'รอตรวจสอบ' \n" +
-					"END status \n" +
-					"	 \n" +
-					"FROM user    \n" +
-					"LEFT JOIN university ON university.university_id = user.university_id   \n" +
-					"LEFT JOIN faculty ON faculty.faculty_id = user.faculty_id   \n" +
-					"LEFT JOIN course ON course.course_id = user.course_id   \n" +
-					"INNER JOIN student_place_of_internship ON student_place_of_internship.user_id = user.user_id \n" +
-					"INNER JOIN place_of_internship ON place_of_internship.place_of_internship_id = student_place_of_internship.place_of_internship_id \n" +
-					"WHERE place_of_internship.status = 1 AND student_place_of_internship.condition = 1 AND place_of_internship.user_id = ?\n" +
-					"ORDER BY student_place_of_internship.status DESC";
+		String sql = "SELECT    \n" +
+				"user.user_id AS user_id,    \n" +
+				"user.firstname AS firstname,    \n" +
+				"user.lastname AS lastname,    \n" +
+				"user.address AS address,    \n" +
+				"user.email AS email,    \n" +
+				"user.phone AS phone,    \n" +
+				"user.profile_image AS profile_image,    \n" +
+				"user.birthday AS birthday,   \n" +
+				"university.name AS university_name,    \n" +
+				"faculty.name AS faculty_name,    \n" +
+				"course.name AS course_name,    \n" +
+				"	\n" +
+				"student_place_of_internship.student_place_of_internship_id AS student_place_of_internship_id,    \n" +
+				"student_place_of_internship.time_reg AS time_reg,    \n" +
+				"student_place_of_internship.status AS status,    \n" +
+				"place_of_internship.name AS internship_name,  \n" +
+				"CONCAT(term.year, \"/\", term.term_no) AS term,\n" +
+				"	\n" +
+				"						\n" +
+				"CASE user.gender    \n" +
+				"WHEN 1 THEN 'ชาย'    \n" +
+				"WHEN 2 THEN 'หญิง'    \n" +
+				"END gender,  \n" +
+				"CASE student_place_of_internship.status    \n" +
+				"WHEN 0 THEN 'ไม่ผ่านการยืนยัน'    \n" +
+				"WHEN 1 THEN 'ผ่านการยืนยัน'    \n" +
+				"WHEN 2 THEN 'รอตรวจสอบ'  \n" +
+				"END status  \n" +
+				"	\n" +
+				"FROM user     \n" +
+				"LEFT JOIN university ON university.university_id = user.university_id    \n" +
+				"LEFT JOIN faculty ON faculty.faculty_id = user.faculty_id    \n" +
+				"LEFT JOIN course ON course.course_id = user.course_id    \n" +
+				"INNER JOIN student_place_of_internship ON student_place_of_internship.user_id = user.user_id  \n" +
+				"INNER JOIN place_of_internship ON place_of_internship.place_of_internship_id = student_place_of_internship.place_of_internship_id  \n" +
+				"INNER JOIN term ON term.term_id = student_place_of_internship.term_id\n" +
+				"WHERE place_of_internship.status = 1 AND student_place_of_internship.condition = 1 AND place_of_internship.user_id = ?\n" +
+				"ORDER BY student_place_of_internship.status DESC";
 		
 		String[] data = {user_id};
 		

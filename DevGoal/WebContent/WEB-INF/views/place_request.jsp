@@ -239,6 +239,23 @@
 
 												</div>
 
+												<hr>
+												<div class="row">
+
+													<div class="col-sm-12 col-md-6 col-lg-2">
+														<select class="form-select" id="insertYear">
+															<option value="0">ปีการศึกษา</option>
+														</select>
+													</div>
+
+													<div class="col-sm-12 col-md-6 col-lg-2">
+														<select class="form-select" id="insertTermNo">
+															<option value="0">เทอม</option>
+														</select>
+													</div>
+
+												</div>
+
 												<div class="row">
 													<div class="col-sm-12 col-md-12 col-lg-9">
 														<div class="card shadow p-3 rounded">
@@ -401,11 +418,30 @@ $(function() {
 	axios({
 		  method: "post",
 		  url: "findProvinces",
+			}).then(function (response) {
+				$.each(response.data, function(i, data) {
+	       	$('#address_6').append($('<option value="' + response.data[i].province_id + '">' + response.data[i].province_name + '</option>'));
+	       	$('#address_6_update').append($('<option value="' + response.data[i].province_id + '">' + response.data[i].province_name + '</option>'));
+	   });
+			
+		  })
+		  .catch(function (response) {
+			Swal.fire({
+				icon: 'error',
+				title: 'ไม่สามารถทำรายการได้ในขณะนี้',
+				showConfirmButton: false,
+				timer: 3000
+			})
+		  });
+	
+	
+	axios({
+		  method: "post",
+		  url: "findYearOfTerm",
 		}).then(function (response) {
 			$.each(response.data, function(i, data) {
-       	$('#address_6').append($('<option value="' + response.data[i].province_id + '">' + response.data[i].province_name + '</option>'));
-       	$('#address_6_update').append($('<option value="' + response.data[i].province_id + '">' + response.data[i].province_name + '</option>'));
-   });
+				 $('#insertYear').append($('<option value="' + response.data[i].year + '">' + response.data[i].year + '</option>'));
+			 });
 			
 		  })
 		  .catch(function (response) {
@@ -418,6 +454,48 @@ $(function() {
 		  });
 	
 	});
+	
+$('#insertYear').change(function() {
+	
+	var e = document.getElementById("insertYear");
+	var year = e.options[e.selectedIndex].value;
+	
+	if(year != '' && year != '0') {
+		
+		axios({
+			  method: "post",
+			  url: "findTermByYear",
+			  data: "year="+year,
+			}).then(function (response) {
+				
+				$("#insertTermNo").empty();
+				$('#insertTermNo').append('<option value="0">เทอม</option>')
+				
+				$.each(response.data, function(i, data) {
+					
+	           		$('#insertTermNo').append($('<option value="' + response.data[i].term_no + '">' + response.data[i].term_no + '</option>'));
+	       		});
+				
+			  })
+			  .catch(function (response) {
+				Swal.fire({
+					icon: 'error',
+					title: 'ไม่สามารถทำรายการได้ในขณะนี้',
+					showConfirmButton: false,
+					timer: 3000
+				})
+			  });
+		
+	} else {
+		
+		$("#insertTermNo").empty();
+		$('#insertTermNo').append('<option value="0">เทอม</option>')
+		
+	}
+	
+	
+	
+});
 	
 $('#address_6').change(function() {
 	
@@ -654,6 +732,14 @@ function insertPlaceOfInternship() {
 			type = document.getElementById('internshipTypeInsert').value
 			address1 = document.getElementById('internshipAddress1Insert').value
 			
+			var q = document.getElementById("insertYear");
+			var year = q.options[q.selectedIndex].value;
+			
+			var w = document.getElementById("insertTermNo");
+			var term = w.options[w.selectedIndex].value;
+			
+			
+			
 			var o = document.getElementById("address_4");
 			var address4 = o.options[o.selectedIndex].text;
 
@@ -669,14 +755,14 @@ function insertPlaceOfInternship() {
 			skill = getValueSkillDatatable()
 			user_id = getUserId()
 			
-			if(name != '' && email != '' && phone != '' && receive != '' && type != '' && address1 != '' && address2 != 'กรุณาเลือกจังหวัด' && address3 != 'กรุณาเลือกอำเภอ' && address4 != 'กรุณาเลือกตำบล' && address5 != '' && ip != '' && skill.length > 0 && user_id.length > 0) {
+			if(year != '' && year != '0' && term != '' && term != '0' && name != '' && email != '' && phone != '' && receive != '' && type != '' && address1 != '' && address2 != 'กรุณาเลือกจังหวัด' && address3 != 'กรุณาเลือกอำเภอ' && address4 != 'กรุณาเลือกตำบล' && address5 != '' && ip != '' && skill.length > 0 && user_id.length > 0) {
 				
 				if(checkDataForm(phone, receive, address5, email, type) == 0) {
 					
 				axios({
 						  method: "post",
 						  url: "insertPlaceOfInternshipNoRole",
-						  data: "internship_name="+name+"&email="+email+"&phone="+phone+"&receive_total="+receive+"&type="+type+"&address1="+address1+"&address2="+address2+"&address3="+address3+"&address4="+address4+"&address5="+address5+"&ip="+ip+"&skill="+JSON.stringify(skill)+"&user_id="+JSON.stringify(user_id),
+						  data: "internship_name="+name+"&email="+email+"&phone="+phone+"&receive_total="+receive+"&type="+type+"&address1="+address1+"&address2="+address2+"&address3="+address3+"&address4="+address4+"&address5="+address5+"&ip="+ip+"&skill="+JSON.stringify(skill)+"&user_id="+JSON.stringify(user_id)+"&year="+year+"&term="+term,
 						}).then(function (response) {
 							
 							if(response.data.alert == "1") {

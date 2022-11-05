@@ -46,15 +46,17 @@
 			<div class="table-container table-responsive">
 				<div class="row abovetable ">
 					<h4>ข้อมูลสถานที่ฝึกงานที่สนใจนิสิต/นักศึกษา</h4>
+					<span style="color: red;">*หากต้องการดูข้อมูลรายเทอม ให้ใส่ข้อมูลช่อง Search ปีการศึกษา/เทอม (เช่น 2565/1)</span>
 				</div>
 				<div class="table-overflow">
 				<table class="table  table-striped text-center"
 					id="internshipDataTable">
 					<thead class="table-dark">
 						<tr>
-							<th>ชื่อบริษัทรับนิสิต/นักศึกษาฝึกงาน</th>
+							<th>ชื่อบริษัทที่สนใจรับนิสิต/นักศึกษาฝึกงาน</th>
 							<th>ที่ตั้ง</th>
 							<th>สถานะ</th>
+							<th>เทอม</th>
 							<th>เวลาที่บันทึก</th>
 							<th></th>
 							<th></th>
@@ -244,6 +246,7 @@ $(function() {
 				    var newCell3 = document.createElement("td")
 				    var newCell4 = document.createElement("td")
 				    var newCell5 = document.createElement("td")
+				    var newCell6 = document.createElement("td")
 				    
 				    newCell0.innerHTML = "<div class='d-flex '><div class='ms-3'><p class='fw-bold mb-1'>"+response.data[i].name+"</p><p class='text-muted mb-0'>"+response.data[i].email+"</p></div></div>"
 				    newCell1.innerHTML = "<p>"+response.data[i].type+"</p>"
@@ -265,17 +268,20 @@ $(function() {
 				    }
 				    
 				    newCell2.innerHTML = cell2
-				    newCell3.innerHTML = "<p>"+response.data[i].time_reg+"</p>"
-				    newCell4.innerHTML = "<button type='button' onClick='ShowInternshipModal(\""+ response.data[i].name +"\",\""+ response.data[i].email +"\",\""+ response.data[i].phone +"\",\""+ response.data[i].receive_total +"\",\""+ response.data[i].type +"\",\""+ response.data[i].status +"\",\""+ response.data[i].time_reg +"\",\""+ response.data[i].place_of_insternship_id +"\",\""+ response.data[i].address1 +"\",\""+ response.data[i].address2 +"\",\""+ response.data[i].address3 +"\",\""+ response.data[i].address4 +"\",\""+ response.data[i].address5 +"\")' class='btn btn-warning' data-bs-toggle='modal' data-bs-target='#internshipModal'>ดูรายละเอียด</button>"
-				    newCell5.innerHTML = "<button id='confirm' onClick='manegementStatus("+response.data[i].place_of_insternship_id+", 1,\""+ response.data[i].student_email +"\",\""+ response.data[i].email +"\")' class='btn btn-success'>ยืนยัน</button><button onClick='manegementStatus("+response.data[i].place_of_insternship_id+", 0,\""+ response.data[i].student_email +"\",\""+ response.data[i].email +"\")' class='btn btn-danger' id='cancel'>ปฏิเสธ</button>"
-				    	
+				    newCell3.innerHTML = "<p>"+response.data[i].term+"</p>"
+				    newCell4.innerHTML = "<p>"+response.data[i].time_reg+"</p>"
+				    newCell5.innerHTML = "<button type='button' onClick='ShowInternshipModal(\""+ response.data[i].name +"\",\""+ response.data[i].email +"\",\""+ response.data[i].phone +"\",\""+ response.data[i].receive_total +"\",\""+ response.data[i].type +"\",\""+ response.data[i].status +"\",\""+ response.data[i].time_reg +"\",\""+ response.data[i].place_of_insternship_id +"\",\""+ response.data[i].address1 +"\",\""+ response.data[i].address2 +"\",\""+ response.data[i].address3 +"\",\""+ response.data[i].address4 +"\",\""+ response.data[i].address5 +"\")' class='btn btn-warning' data-bs-toggle='modal' data-bs-target='#internshipModal'>ดูรายละเอียด</button>"
+				    newCell6.innerHTML = "<button id='confirm' onClick='manegementStatus("+response.data[i].place_of_insternship_id+", 1,\""+ response.data[i].student_email +"\",\""+ response.data[i].email +"\")' class='btn btn-success'>ยืนยัน</button><button onClick='manegementStatus("+response.data[i].place_of_insternship_id+", 0,\""+ response.data[i].student_email +"\",\""+ response.data[i].email +"\")' class='btn btn-danger' id='cancel'>ปฏิเสธ</button>"
+				    
 				    newRow.append(newCell0)
 				    newRow.append(newCell1)
 				    newRow.append(newCell2)
 				    newRow.append(newCell3)
 				    newRow.append(newCell4)
 				    newRow.append(newCell5)
+				    newRow.append(newCell6)
 				    document.getElementById("internshipTable").appendChild(newRow)
+				    
 				    
             });
            

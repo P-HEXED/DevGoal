@@ -57,6 +57,7 @@
         <div class="table-container table-responsive">
             <div class="row abovetable "> 
                 <h4>นิสิต/ นักศึกษาที่สนใจบริษัทของคุณ</h4>
+                <span style="color: red;">*หากต้องการดูข้อมูลรายเทอม ให้ใส่ข้อมูลช่อง Search ปีการศึกษา/เทอม (เช่น 2565/1)</span>
                 </div> 
                 <div class="table-overflow">
                 <table class="table text-center" id="userDataTable">
@@ -67,6 +68,7 @@
                       <th>คณะ</th>
                       <th>มหาวิทยาลัย</th>
                       <th>สถานะ</th>
+                      <th>เทอม</th>
                       <th>เวลา</th>
                       <th></th>
                       <th></th>
@@ -228,6 +230,7 @@ $(function() {
 			
 			$.each(response.data, function(i, data) {
 				
+				
 					var newRow = document.createElement("tr")
 					var newCell0 = document.createElement("td")
 				    var newCell1 = document.createElement("td")
@@ -237,6 +240,7 @@ $(function() {
 				    var newCell5 = document.createElement("td")
 				    var newCell6 = document.createElement("td")
 				    var newCell7 = document.createElement("td")
+				    var newCell8 = document.createElement("td")
 				    
 				    var name = response.data[i].firstname +' '+ response.data[i].lastname
 				    
@@ -263,9 +267,11 @@ $(function() {
 				    
 				    
 				    newCell4.innerHTML = cell4
-				    newCell5.innerHTML = "<p>"+response.data[i].time_reg+"</p>"
-				    newCell6.innerHTML = "<button onClick='showModal(\""+response.data[i].user_id+"\",\""+ response.data[i].firstname+"\",\""+ response.data[i].lastname+"\",\""+ response.data[i].address+"\",\""+response.data[i].email+"\",\""+response.data[i].phone+"\",\""+response.data[i].profile_image+"\",\""+response.data[i].birthday+"\",\""+response.data[i].university_name+"\",\""+response.data[i].faculty_name+"\",\""+response.data[i].course_name+"\",\""+response.data[i].time_reg+"\",\""+response.data[i].internship_name+"\",\""+response.data[i].gender+"\",\""+response.data[i].status+"\",\""+response.data[i].student_place_of_internship_id+"\")' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#sendnotify'>รายละเอียด</button>"
-				    newCell7.innerHTML = "<button id='confirm' onClick='manegementStatus("+response.data[i].user_id+", 1, "+response.data[i].student_place_of_internship_id+")' class='btn btn-success'>ยืนยัน</button><button onClick='manegementStatus("+response.data[i].user_id+", 0, "+response.data[i].student_place_of_internship_id+")' class='btn btn-danger' id='cancel'>ปฏิเสธ</button>"
+				    newCell5.innerHTML = "<p>"+response.data[i].term+"</p>"
+				    newCell6.innerHTML = "<p>"+response.data[i].time_reg+"</p>"
+				    newCell7.innerHTML = "<button onClick='showModal(\""+response.data[i].user_id+"\",\""+ response.data[i].firstname+"\",\""+ response.data[i].lastname+"\",\""+ response.data[i].address+"\",\""+response.data[i].email+"\",\""+response.data[i].phone+"\",\""+response.data[i].profile_image+"\",\""+response.data[i].birthday+"\",\""+response.data[i].university_name+"\",\""+response.data[i].faculty_name+"\",\""+response.data[i].course_name+"\",\""+response.data[i].time_reg+"\",\""+response.data[i].internship_name+"\",\""+response.data[i].gender+"\",\""+response.data[i].status+"\",\""+response.data[i].student_place_of_internship_id+"\")' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#sendnotify'>รายละเอียด</button>"
+				    newCell8.innerHTML = "<button id='confirm' onClick='manegementStatus("+response.data[i].user_id+", 1, "+response.data[i].student_place_of_internship_id+")' class='btn btn-success'>ยืนยัน</button><button onClick='manegementStatus("+response.data[i].user_id+", 0, "+response.data[i].student_place_of_internship_id+")' class='btn btn-danger' id='cancel'>ปฏิเสธ</button>"
+
 				    
 				    newRow.append(newCell0)
 				    newRow.append(newCell1)
@@ -275,6 +281,7 @@ $(function() {
 				    newRow.append(newCell5)
 				    newRow.append(newCell6)
 				    newRow.append(newCell7)
+				    newRow.append(newCell8)
 				    document.getElementById("userData").appendChild(newRow)
 				    
             });

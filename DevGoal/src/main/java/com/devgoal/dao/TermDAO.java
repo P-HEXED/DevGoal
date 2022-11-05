@@ -32,6 +32,21 @@ public class TermDAO implements DAO<TermModel> {
 		return db.queryList(sql);
 	}
 	
+	public ArrayList<HashMap<String, Object>> queryYearOfTerm() {
+		
+		String sql = "SELECT year FROM term WHERE status = 1 GROUP BY year";
+		
+		return db.queryList(sql);
+	}
+	
+	public ArrayList<HashMap<String, Object>> queryTermByYear(String year) {
+		
+		String sql = "SELECT term_no FROM term WHERE year = ? AND status = 1";
+		String[] data = {year};
+		
+		return db.queryListWithPrepare(sql, data);
+	}
+	
 	public int updateStatusTerm(String status, String term_id) {
 		
 		String sql = "UPDATE term SET status = ? WHERE term_id = ?";
@@ -63,6 +78,14 @@ public class TermDAO implements DAO<TermModel> {
 		String[] data = {year, term, begin_date, end_date, term_id};
 		
 		return db.execute(sql, data);
+	}
+	
+	public HashMap<String, Object> queryTermId(String year, String term_no) {
+		
+		String sql = "SELECT term_id FROM term WHERE year = ? AND term_no = ? AND status = 1 LIMIT 1";
+		String[] data = {year, term_no};
+		
+		return db.querySingleWithPrepare(sql, data);
 	}
 
 	@Override

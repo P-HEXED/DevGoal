@@ -203,31 +203,36 @@ public class PlaceOfInternshipDAO implements DAO<PlaceOfInternshipModel>{
 	
 	public ArrayList<HashMap<String, Object>> queryPlaceOfInternshipReuqestStudentRole2() {
 		
-		String sql = "SELECT  \n" +
-					"	place_of_internship.place_of_internship_id,  \n" +
-					"	place_of_internship.name,  \n" +
-					"	place_of_internship.address,  \n" +
-					"	place_of_internship.email,  \n" +
-					"	place_of_internship.phone,  \n" +
-					"	place_of_internship.recive_total,  \n" +
-					"	place_of_internship.time_reg,  \n" +
-					"CASE place_of_internship.type   \n" +
-					"		WHEN 1 THEN  \n" +
-					"		'ในประเทศ'   \n" +
-					"		WHEN 2 THEN  \n" +
-					"		'ต่างประเทศ'   \n" +
-					"END type,  \n" +
-					"CASE place_of_internship.status   \n" +
-					"		WHEN 0 THEN  \n" +
-					"		'ไม่ผ่านการยืนยัน'   \n" +
-					"		WHEN 1 THEN  \n" +
-					"		'ยืนยันแล้ว'   \n" +
-					"		WHEN 2 THEN  \n" +
-					"		'รอการตรวจสอบ'   \n" +
-					"END status   \n" +
-					"FROM  \n" +
-					"	place_of_internship  \n" +
-					"WHERE place_of_internship.request_status = 3 AND place_of_internship.status = 2";
+		String sql = "SELECT   \n" +
+				"	place_of_internship.place_of_internship_id,   \n" +
+				"	place_of_internship.name,   \n" +
+				"	place_of_internship.address,   \n" +
+				"	place_of_internship.email,   \n" +
+				"	place_of_internship.phone,   \n" +
+				"	place_of_internship.recive_total,   \n" +
+				"	place_of_internship.time_reg,  \n" +
+				"	CONCAT(term.year, '/', term.term_no) AS term, \n" +
+				"CASE place_of_internship.type    \n" +
+				"		WHEN 1 THEN   \n" +
+				"		'ในประเทศ'    \n" +
+				"		WHEN 2 THEN   \n" +
+				"		'ต่างประเทศ'    \n" +
+				"END type,   \n" +
+				"CASE place_of_internship.status    \n" +
+				"		WHEN 0 THEN   \n" +
+				"		'ไม่ผ่านการยืนยัน'    \n" +
+				"		WHEN 1 THEN   \n" +
+				"		'ยืนยันแล้ว'    \n" +
+				"		WHEN 2 THEN   \n" +
+				"		'รอการตรวจสอบ'    \n" +
+				"END status    \n" +
+				"FROM   \n" +
+				"	place_of_internship   \n" +
+				"	\n" +
+				"INNER JOIN student_place_of_internship ON student_place_of_internship.place_of_internship_id = place_of_internship.place_of_internship_id\n" +
+				"INNER JOIN term ON term.term_id = student_place_of_internship.term_id	\n" +
+				"WHERE place_of_internship.request_status = 3 AND place_of_internship.status = 2 AND student_place_of_internship.status = 2\n" +
+				"GROUP BY place_of_internship.place_of_internship_id";
 		
 		return db.queryList(sql);
 	}
@@ -389,33 +394,34 @@ public class PlaceOfInternshipDAO implements DAO<PlaceOfInternshipModel>{
 		return db.queryListWithPrepare(sql, data);
 	}
 	
-	public ArrayList<HashMap<String, Object>> queryPlaceOfInternshipNoMatching(String user_id) {
+	public ArrayList<HashMap<String, Object>> queryPlaceOfInternshipNoMatching(String user_id, String matchingIdList) {
 		
-		String sql = "SELECT   \n" +
-						"	place_of_internship.place_of_internship_id,   \n" +
-						"	place_of_internship.name,  \n" +
-						"	place_of_internship.address,   \n" +
-						"	place_of_internship.email,   \n" +
-						"	place_of_internship.phone,   \n" +
-						"	place_of_internship.recive_total,   \n" +
-						"	place_of_internship.time_reg,  \n" +
-						"	place_of_internship.status,  \n" +
-						"	place_of_internship.user_id,  \n" +
-						"							 \n" +
-						" CASE place_of_internship.type   \n" +
-						"	WHEN 1 THEN 'ในประเทศ'   \n" +
-						"	WHEN 2 THEN 'ต่างประเทศ'   \n" +
-						" END type,\n" +
-						" 0 AS matching\n" +
-						"							 \n" +
-						"FROM   \n" +
-						"	place_of_internship  \n" +
-						"		\n" +
-						"INNER JOIN place_of_internship_skill ON place_of_internship_skill.place_of_internship_id = place_of_internship.place_of_internship_id  \n" +
-						"INNER JOIN skill ON skill.skill_id = place_of_internship_skill.skill_id  \n" +
-						"WHERE skill.detail NOT IN (SELECT skill.detail FROM skill  INNER JOIN user_skill ON user_skill.skill_id = skill.skill_id WHERE user_skill.user_id = ? AND skill.status = 1 GROUP BY skill.detail) \n" +
-						"AND place_of_internship.status = 1  \n" +
-						"GROUP BY place_of_internship.place_of_internship_id ";
+		String sql = "SELECT    \n" +
+				"	place_of_internship.place_of_internship_id,    \n" +
+				"	place_of_internship.name,   \n" +
+				"	place_of_internship.address,    \n" +
+				"	place_of_internship.email,    \n" +
+				"	place_of_internship.phone,    \n" +
+				"	place_of_internship.recive_total,    \n" +
+				"	place_of_internship.time_reg,   \n" +
+				"	place_of_internship.status,   \n" +
+				"	place_of_internship.user_id,   \n" +
+				"								\n" +
+				" CASE place_of_internship.type    \n" +
+				"	WHEN 1 THEN 'ในประเทศ'    \n" +
+				"	WHEN 2 THEN 'ต่างประเทศ'    \n" +
+				" END type, \n" +
+				" 0 AS matching \n" +
+				"								\n" +
+				"FROM    \n" +
+				"	place_of_internship   \n" +
+				"		 \n" +
+				"INNER JOIN place_of_internship_skill ON place_of_internship_skill.place_of_internship_id = place_of_internship.place_of_internship_id   \n" +
+				"INNER JOIN skill ON skill.skill_id = place_of_internship_skill.skill_id   \n" +
+				"WHERE skill.detail NOT IN (SELECT skill.detail FROM skill  INNER JOIN user_skill ON user_skill.skill_id = skill.skill_id WHERE user_skill.user_id = ? AND skill.status = 1 GROUP BY skill.detail) \n" +
+				"AND place_of_internship_skill.place_of_internship_id NOT IN ("+matchingIdList+")\n" +
+				"AND place_of_internship.status = 1   \n" +
+				"GROUP BY place_of_internship.place_of_internship_id ";
 		
 		String[] data = {user_id};
 		return db.queryListWithPrepare(sql, data);
@@ -552,7 +558,7 @@ public class PlaceOfInternshipDAO implements DAO<PlaceOfInternshipModel>{
 		return db.queryListWithPrepare(sql, data);
 	}
 	
-	public ArrayList<HashMap<String, Object>> queryPlaceOfInternshipNoMatchingByZone(String user_id, String[] zone_data) {
+	public ArrayList<HashMap<String, Object>> queryPlaceOfInternshipNoMatchingByZone(String user_id, String[] zone_data, String matchingIdList) {
 		
 		String sub_sql = "";
 		
@@ -594,6 +600,7 @@ public class PlaceOfInternshipDAO implements DAO<PlaceOfInternshipModel>{
 					"INNER JOIN skill ON skill.skill_id = place_of_internship_skill.skill_id \n" +
 					"WHERE skill.detail NOT IN (SELECT skill.detail FROM skill  INNER JOIN user_skill ON user_skill.skill_id = skill.skill_id WHERE user_skill.user_id = ? AND skill.status = 1 \n" +
 					"GROUP BY skill.detail) \n" +
+					"AND place_of_internship_skill.place_of_internship_id NOT IN ("+matchingIdList+")\n" +
 					"AND place_of_internship.status = 1  \n" +
 					sub_sql +
 					"GROUP BY place_of_internship.place_of_internship_id";

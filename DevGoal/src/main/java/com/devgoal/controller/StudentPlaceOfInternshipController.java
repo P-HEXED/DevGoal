@@ -20,8 +20,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.devgoal.dao.EventHistoryDAO;
 import com.devgoal.dao.PlaceOfInternshipDAO;
-import com.devgoal.dao.StudentOverseasWorkPlaceDAO;
 import com.devgoal.dao.StudentPlaceOfInternshipDAO;
+import com.devgoal.dao.TermDAO;
 import com.devgoal.dao.UserDAO;
 
 @Controller
@@ -48,20 +48,29 @@ public class StudentPlaceOfInternshipController {
 			String user_id = session.getAttribute("id").toString();
 			String internship_id = request.getParameter("internship_id");
 			String ip = request.getParameter("ip");
-			if(user_id != null && !user_id.equals("") && internship_id != null && !internship_id.equals("") && ip != null && !ip.equals("")) {
+			String year = request.getParameter("year");
+			String term = request.getParameter("term");
+			
+			if(year != null && !year.equals("") && !year.equals("0") && term != null && !term.equals("") && !term.equals("0") && user_id != null && !user_id.equals("") && internship_id != null && !internship_id.equals("") && ip != null && !ip.equals("")) {
 
-				int insertStatus = new StudentPlaceOfInternshipDAO().insertInternshipAndUser(user_id, internship_id, "1");
-				HashMap<String, Object> email = new PlaceOfInternshipDAO().queryEmailUser(internship_id);
+				HashMap<String, Object> term_id = new TermDAO().queryTermId(year, term);
 				
-				if(insertStatus > 0) {
+				if(term_id.get("term_id") != null) {
 					
-					status = "ส่งข้อมูลไปยังบริษัทเรียบร้อย";
-					alert = "1";
+					int insertStatus = new StudentPlaceOfInternshipDAO().insertInternshipAndUser(user_id, internship_id, "1", term_id.get("term_id").toString());
+					HashMap<String, Object> email = new PlaceOfInternshipDAO().queryEmailUser(internship_id);
 					
-					etc.sendEmail(user_id, email.get("email").toString(), "นิสิต/นักศึกษาสนใจบริษัทของคุณ", "โปรดตรวจสอบเพื่อดำเนินการต่อไปได้ที่นี่ : "+ new PathConfig().url+"studentRequest");
-					
-					new EventHistoryDAO().insertEventHistory(user_id, "ส่งข้อมูลไปยังสถานที่ฝึกงานรหัส "+internship_id, ip);
+					if(insertStatus > 0) {
+						
+						status = "ส่งข้อมูลไปยังบริษัทเรียบร้อย";
+						alert = "1";
+						
+						etc.sendEmail(user_id, email.get("email").toString(), "นิสิต/นักศึกษาสนใจบริษัทของคุณ", "โปรดตรวจสอบเพื่อดำเนินการต่อไปได้ที่นี่ : "+ new PathConfig().url+"studentRequest");
+						
+						new EventHistoryDAO().insertEventHistory(user_id, "ส่งข้อมูลไปยังสถานที่ฝึกงานรหัส "+internship_id, ip);
+					}
 				}
+				
 				
 			}
 		}
@@ -109,6 +118,7 @@ public class StudentPlaceOfInternshipController {
 				jsonObject.put("student_place_of_internship_id", uerData.get(i).get("student_place_of_internship_id"));
 				jsonObject.put("gender", uerData.get(i).get("gender"));
 				jsonObject.put("status", uerData.get(i).get("status"));
+				jsonObject.put("term", uerData.get(i).get("term"));
 
 				jsonArray.put(jsonObject);
 			

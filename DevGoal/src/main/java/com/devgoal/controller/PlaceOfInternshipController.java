@@ -19,11 +19,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.devgoal.dao.EventHistoryDAO;
-import com.devgoal.dao.OverseasWorkPlaceDAO;
 import com.devgoal.dao.PlaceOfInternshipDAO;
 import com.devgoal.dao.PlaceOfInternshipSkillDAO;
 import com.devgoal.dao.SkillDAO;
 import com.devgoal.dao.StudentPlaceOfInternshipDAO;
+import com.devgoal.dao.TermDAO;
 
 @Controller
 public class PlaceOfInternshipController {
@@ -465,12 +465,20 @@ public void managementInternshipStatusByAdmin(HttpSession session, HttpServletRe
 		if(sessionStatus == 0 && session.getAttribute("role").toString().equals("1")) {
 			
 			placeOfInternshipMatching = new PlaceOfInternshipDAO().queryPlaceOfInternshipMatching(session.getAttribute("id").toString());
-			placeOfInternshipNoMatching = new PlaceOfInternshipDAO().queryPlaceOfInternshipNoMatching(session.getAttribute("id").toString());
-			placeOfInternshipNoSkill = new PlaceOfInternshipDAO().queryPlaceOfInternshipNoSkill();
+			
+			String matchingIdList = "";
 			
 			for(int i = 0; i < placeOfInternshipMatching.size(); i++) {
 				placeOfInternship.add(placeOfInternshipMatching.get(i));
+				matchingIdList += placeOfInternshipMatching.get(i).get("place_of_internship_id").toString();
+				matchingIdList += ", ";
 			}
+			
+			matchingIdList = matchingIdList.substring(0, matchingIdList.length()-2);
+			
+			placeOfInternshipNoMatching = new PlaceOfInternshipDAO().queryPlaceOfInternshipNoMatching(session.getAttribute("id").toString(), matchingIdList);
+			placeOfInternshipNoSkill = new PlaceOfInternshipDAO().queryPlaceOfInternshipNoSkill();
+			
 			
 			for(int i = 0; i < placeOfInternshipNoMatching.size(); i++) {
 				placeOfInternship.add(placeOfInternshipNoMatching.get(i));
@@ -536,12 +544,20 @@ public void managementInternshipStatusByAdmin(HttpSession session, HttpServletRe
 				}
 				
 				placeOfInternshipMatching = new PlaceOfInternshipDAO().queryPlaceOfInternshipMatchingByZone(session.getAttribute("id").toString(), zone_data);
-				placeOfInternshipNoMatching = new PlaceOfInternshipDAO().queryPlaceOfInternshipNoMatchingByZone(session.getAttribute("id").toString(), zone_data);
-				placeOfInternshipNoSkill = new PlaceOfInternshipDAO().queryPlaceOfInternshipNoSkillByZone(zone_data);
+				
+				
+				String matchingIdList = "";
 				
 				for(int i = 0; i < placeOfInternshipMatching.size(); i++) {
 					placeOfInternship.add(placeOfInternshipMatching.get(i));
+					matchingIdList += placeOfInternshipMatching.get(i).get("place_of_internship_id").toString();
+					matchingIdList += ", ";
 				}
+				
+				matchingIdList = matchingIdList.substring(0, matchingIdList.length()-2);
+				
+				placeOfInternshipNoMatching = new PlaceOfInternshipDAO().queryPlaceOfInternshipNoMatchingByZone(session.getAttribute("id").toString(), zone_data, matchingIdList);
+				placeOfInternshipNoSkill = new PlaceOfInternshipDAO().queryPlaceOfInternshipNoSkillByZone(zone_data);
 				
 				for(int i = 0; i < placeOfInternshipNoMatching.size(); i++) {
 					placeOfInternship.add(placeOfInternshipNoMatching.get(i));
@@ -913,38 +929,49 @@ public void managementInternshipStatusByAdmin(HttpSession session, HttpServletRe
 		String address5 = request.getParameter("address5");
 		String skill = request.getParameter("skill");
 		String user_id_list = request.getParameter("user_id");
+		String year = request.getParameter("year");
+		String term = request.getParameter("term");
 		
-		if(checkDataNoRole(phone, receive, email, ip, name, type, address1, address2, address3, address4, address5) == 0 && skill != null && !skill.equals("") && user_id_list != null && !user_id_list.equals("")) {
+		if(checkDataNoRole(phone, receive, email, ip, name, type, address1, address2, address3, address4, address5) == 0 && skill != null && !skill.equals("") && user_id_list != null && !user_id_list.equals("") && year != null && !year.equals("") && !year.equals("0") && term != null && !term.equals("") && !term.equals("0")) {
 			
-			ArrayList<HashMap<String, String>> skillData = etc.checkSkill(skill);
-			ArrayList<String> internshipSkillID = new SkillDAO().checkInsertDuplicateSkill(skillData);
+			HashMap<String, Object> termId = new TermDAO().queryTermId(year, term);
 			
-			String address = address1+" "+address2+" "+address3+" "+address4+" "+address5;
-			int lastIdInternship = new PlaceOfInternshipDAO().insertPlaceOfInternshipNoRole(name, address, email, phone, receive, type);
 			
-			if(lastIdInternship > 0) {
+			if(termId.get("term_id") != null) {
 				
-				for(int i = 0; i < internshipSkillID.size(); i++) {
-					
-					new PlaceOfInternshipSkillDAO().insertPlaceOfInternshipSkill(Integer.toString(lastIdInternship), internshipSkillID.get(i));
-				}
+				String term_id = termId.get("term_id").toString();
 				
-				user_id_list = user_id_list.replace("[", "");
-				user_id_list = user_id_list.replace("]", "");
-				user_id_list = user_id_list.replace("\"", "");
+				ArrayList<HashMap<String, String>> skillData = etc.checkSkill(skill);
+				ArrayList<String> internshipSkillID = new SkillDAO().checkInsertDuplicateSkill(skillData);
 				
-				String[] user_id_data = user_id_list.split(",");
+				String address = address1+" "+address2+" "+address3+" "+address4+" "+address5;
+				int lastIdInternship = new PlaceOfInternshipDAO().insertPlaceOfInternshipNoRole(name, address, email, phone, receive, type);
 				
-				for(int i = 0; i < user_id_data.length; i++) {
+				if(lastIdInternship > 0) {
 					
-					new StudentPlaceOfInternshipDAO().insertInternshipAndUser(user_id_data[i], Integer.toString(lastIdInternship), "2");
-				}
+					for(int i = 0; i < internshipSkillID.size(); i++) {
+						
+						new PlaceOfInternshipSkillDAO().insertPlaceOfInternshipSkill(Integer.toString(lastIdInternship), internshipSkillID.get(i));
+					}
 					
+					user_id_list = user_id_list.replace("[", "");
+					user_id_list = user_id_list.replace("]", "");
+					user_id_list = user_id_list.replace("\"", "");
 					
-				status = "ส่งข้อมูลบริษัทและนิสิต/นักศึกษาให้ระบบตรวจสอบแล้ว";
-				alert = "1";
+					String[] user_id_data = user_id_list.split(",");
 					
-		}
+					for(int i = 0; i < user_id_data.length; i++) {
+						
+						new StudentPlaceOfInternshipDAO().insertInternshipAndUser(user_id_data[i], Integer.toString(lastIdInternship), "2", term_id);
+					}
+						
+						
+					status = "ส่งข้อมูลบริษัทและนิสิต/นักศึกษาให้ระบบตรวจสอบแล้ว";
+					alert = "1";
+					
+			}
+				
+			}
 			
 		
 		JSONObject jsonObject = new JSONObject();
@@ -1010,11 +1037,13 @@ public void managementInternshipStatusByAdmin(HttpSession session, HttpServletRe
 				jsonObject.put("type", placeOfInternship.get(i).get("type"));
 				jsonObject.put("status", placeOfInternship.get(i).get("status"));
 				jsonObject.put("time_reg", placeOfInternship.get(i).get("time_reg"));
+				jsonObject.put("term", placeOfInternship.get(i).get("term"));
 				
 				emailStudent = new PlaceOfInternshipDAO().queryEmailPlaceOfInternshipReuqestStudentRole2(placeOfInternship.get(i).get("place_of_internship_id").toString());
-				
+
 				for(int k = 0; k < emailStudent.size(); k++) {
-					student_email += emailStudent.get(i).get("email");
+					
+					student_email += emailStudent.get(k).get("email");
 					student_email += ", ";
 				}
 				
