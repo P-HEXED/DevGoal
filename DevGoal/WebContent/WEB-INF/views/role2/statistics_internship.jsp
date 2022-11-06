@@ -18,181 +18,189 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-	
+
 <script type="text/javascript" src="resources/js/loading.js"></script>
 <link rel="stylesheet" href="resources/stylecss/loading_axios.css">
 <style>
-      p{
-      font-size: 14px;
-      }
-    @media (min-width:768px) and (max-width:912px){
-        .card-body{
-          margin-top:50px;
-          margin-bottom:50px;
-        }
-      }
-      @media (max-width:912px){
-        .card,.card-body{
-         text-align: center;
-        }
-        .btn{
-        margin-top:20px;
-        }
-      }
-        @media (max-width:765px){
-        .card-date{
-         margin-top:45px;
-        }
-      }
-      #smallcard01,#smallcard02,#smallcard03,#datecard{
-        align-items: stretch;
-      }
-      #smallcard01{
-        border-right:5px solid #d9534f;
-      }
-      #smallcard02{
-        border-right: 5px solid #5cb85c;
-      }
-      #smallcard03{
-        border-right: 5px solid #f0ad4e;
-      }
-    </style>
+p {
+	font-size: 14px;
+}
+
+@media ( min-width :768px) and (max-width:912px) {
+	.card-body {
+		margin-top: 50px;
+		margin-bottom: 50px;
+	}
+}
+
+@media ( max-width :912px) {
+	.card, .card-body {
+		text-align: center;
+	}
+	.btn {
+		margin-top: 20px;
+	}
+}
+
+@media ( max-width :765px) {
+	.card-date {
+		margin-top: 45px;
+	}
+}
+
+#smallcard01, #smallcard02, #smallcard03, #datecard {
+	align-items: stretch;
+}
+
+#smallcard01 {
+	border-right: 5px solid #d9534f;
+}
+
+#smallcard02 {
+	border-right: 5px solid #5cb85c;
+}
+
+#smallcard03 {
+	border-right: 5px solid #f0ad4e;
+}
+</style>
 </head>
 <body>
-<div class="ring">DEVGOAL<span class="loading"></span></div>
-		<main>
-			<nav class="navbar navbar-expand d-flex flex-column " id="sidebar">
-				<include src="resources/includeBody/role2/sidebar_admin.html"></include>
-			</nav>
-			<include src="resources/includeBody/role2/navbar_admin.html"></include>
+	<div class="ring">
+		DEVGOAL<span class="loading"></span>
+	</div>
+	<main>
+		<nav class="navbar navbar-expand d-flex flex-column " id="sidebar">
+			<include src="resources/includeBody/role2/sidebar_admin.html"></include>
+		</nav>
+		<include src="resources/includeBody/role2/navbar_admin.html"></include>
 
-			<section class="p-4 my-container">
-				<button class="btn" id="menu-btn">
-					<i class="fa-solid fa-list"></i>
-				</button>
-				<div class="row">
-					<div class="col-lg-3 col-sm-12 col-md-12">
-						<div class="card card-date">
-							<div class="row p-3">
-								<div class="col-lg-6 col-sm-12 col-md-12">
-									<div class="form-group ">
-										<label for="input_from">จากวันที่</label> <input type="text"
-											class="form-control" id="input_from" placeholder="Start Date">
-									</div>
-								</div>
-								<div class="col-lg-6 col-sm-12 col-md-12">
-									<div class="form-group">
-										<label for="input_to">ถึงวันที่</label> <input type="text"
-											class="form-control" id="input_to" placeholder="End Date">
-										<br>
-										<button type="button" onClick="searchData()"
-											class='btn btn-primary' id="search" style="float: right;">ค้นหา</button>
-									</div>
-								</div>
+		<section class="p-4 my-container">
+			<button class="btn" id="menu-btn">
+				<i class="fa-solid fa-list"></i>
+			</button>
+			<h4>สถิติการฝึกงาน</h4>
+			<div class="row">
+
+				<div class="col-lg-5 col-sm-12 col-md-12">
+					<div class="card card-date">
+						<div class="row">
+
+							<div class="col-sm-12 col-md-6 col-lg-6">
+								<select class="form-select" id="insertYear">
+									<option value="0">ปีการศึกษา</option>
+								</select>
 							</div>
+
+							<div class="col-sm-12 col-md-6 col-lg-4">
+								<select class="form-select" id="insertTermNo">
+									<option value="0">เทอม</option>
+								</select>
+							</div>
+							
+							<div class="col-sm-12 col-md-6 col-lg-2">
+								<button type="button" onClick="searchData()" class='btn btn-primary' id="search" style="float: right;">ค้นหา</button>
+							</div>
+							
 						</div>
-					</div>
-
-					<div class="col-lg-3 col-sm-12 col-md-12">
-						<div class="card" id="smallcard03">
-							<div class="card-body" style="height: 145px;">
-								<div class="row gx-5">
-									<div class="col-lg-12 col-md-4 col-sm-12 mb-3">
-										<i class="fa-solid fa-user-clock text-warning fa-2x"></i>
-										<p>นิสิต/นัศึกษาที่กำลังฝึกงาน</p>
-										<h4 id="userStatus2"></h4>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-lg-3 col-sm-12 col-md-12">
-						<div class="card" id="smallcard02">
-							<div class="card-body" style="height: 145px;">
-								<div class="row gx-5">
-									<div class="col-lg-12 col-md-4 col-sm-12 mb-3">
-										<i class="fa-solid fa-user-check text-success fa-2x"></i>
-										<p>นิสิต/นักศึกษาที่ฝึกงานแล้ว</p>
-										<h4 id="userStatus1"></h4>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					
-					<div class="col-lg-5 col-sm-12 col-md-12">
-						<div class="card">
-							<div class="card-body">
-								<canvas id="donutChart" height="215vh" width="290vw"></canvas>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-lg-7 col-sm-12 col-md-12">
-							<div class="card">
-								<div class="card-body">
-
-									<div class="col-sm-6 col-md-4 col-lg-4">
-										<select class="form-select" id="internshipSelect">
-											<option value="0">เลือกสถานที่ฝึกงาน</option>
-										</select>
-									</div>
-									<br>
-									
-									<div class="table-overflow">
-									<table class="table text-center" id="userDataTable">
-										<thead class="table-dark text-white">
-											<tr>
-												<th>ชื่อ - นามสกุล</th>
-												<th>เวลาที่ดำเนินการฝึกงาน</th>
-											</tr>
-										</thead>
-										<tbody id="userData">
-										</tbody>
-									</table>
-									</div>
-								</div>
-							</div>
+						
 					</div>
 				</div>
-			</section>
-		</main>
-		
-		<div class="lds-roller" id="spinner" style="display: none;">
-			<div></div>
-			<div></div>
-			<div></div>
-			<div></div>
-			<div></div>
-			<div></div>	
-			<div></div>
-			<div></div>
-		</div>
 
-		<script
-			src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-		<script
-			src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-			integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-			crossorigin="anonymous"></script>
-		<script
-			src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.min.js"
-			integrity="sha384-5h4UG+6GOuV9qXh6HqOLwZMY4mnLPraeTrjT5v07o347pj6IkfuoASuGBhfDsp3d"
-			crossorigin="anonymous"></script>
-		<script type="text/javascript" src="resources/js/sidebar.js"></script>
-		<script src="resources/js/chart.js"></script>
-		<script src="resources/js/jquery-3.3.1.min.js"></script>
-		<script src="resources/js/popper.min.js"></script>
-		<script src="resources/js/bootstrap.min.js"></script>
-		<script src="resources/js/picker.js"></script>
-		<script src="resources/js/picker.date.js"></script>
-		<script src="resources/js/main.js"></script>
-		<script type="text/javascript"
-			src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-		<script src="resources/js/jquery.dataTables.min.js"></script>
-		<script
-			src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+				<div class="col-lg-3 col-sm-12 col-md-12">
+					<div class="card" id="smallcard03">
+						<div class="card-body" style="height: 145px;">
+							<div class="row gx-5">
+								<div class="col-lg-12 col-md-4 col-sm-12 mb-3">
+									<i class="fa-solid fa-user-clock text-warning fa-2x"></i>
+									<p>นิสิต/นัศึกษาที่กำลังฝึกงาน</p>
+									<h4 id="userStatus2"></h4>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-3 col-sm-12 col-md-12">
+					<div class="card" id="smallcard02">
+						<div class="card-body" style="height: 145px;">
+							<div class="row gx-5">
+								<div class="col-lg-12 col-md-4 col-sm-12 mb-3">
+									<i class="fa-solid fa-user-check text-success fa-2x"></i>
+									<p>นิสิต/นักศึกษาที่ฝึกงานแล้ว</p>
+									<h4 id="userStatus1"></h4>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-5 col-sm-12 col-md-12">
+					<div class="card">
+						<div class="card-body">
+							<canvas id="donutChart" height="215vh" width="290vw"></canvas>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-7 col-sm-12 col-md-12">
+					<div class="card">
+						<div class="card-body">
+
+							<div class="table-overflow">
+								<table class="table text-center" id="userDataTable">
+									<thead class="table-dark text-white">
+										<tr>
+											<th>ชื่อ - นามสกุล</th>
+											<th>ชื่อสถานที่ฝึกงาน</th>
+											<th>สถานะการฝึกงาน</th>
+										</tr>
+									</thead>
+									<tbody id="userData">
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<div class="lds-roller" id="spinner" style="display: none;">
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+		integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.min.js"
+		integrity="sha384-5h4UG+6GOuV9qXh6HqOLwZMY4mnLPraeTrjT5v07o347pj6IkfuoASuGBhfDsp3d"
+		crossorigin="anonymous"></script>
+	<script type="text/javascript" src="resources/js/sidebar.js"></script>
+	<script src="resources/js/chart.js"></script>
+	<script src="resources/js/jquery-3.3.1.min.js"></script>
+	<script src="resources/js/popper.min.js"></script>
+	<script src="resources/js/bootstrap.min.js"></script>
+	<script src="resources/js/picker.js"></script>
+	<script src="resources/js/picker.date.js"></script>
+	<script src="resources/js/main.js"></script>
+	<script type="text/javascript"
+		src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="resources/js/jquery.dataTables.min.js"></script>
+	<script
+		src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
 </body>
 </html>
 <script type="text/javascript">
@@ -201,9 +209,66 @@
 	
 	$(function() {
 		
-		$('#userDataTable').dataTable( {
+		axios({
+			  method: "post",
+			  url: "getStudentStatisticsInternshipingDataNoFilter",
+			}).then(function (response) {
+				
+				$("#userDataTable").DataTable().clear().draw();
+		        $("#userDataTable").dataTable().fnDestroy();
+		        
+				$.each(response.data, function(i, data) {
+					
+					var newRow = document.createElement("tr")
+					var newCell = document.createElement("td")
+					var newCell0 = document.createElement("td")
+					var newCell1 = document.createElement("td")
+				    
+				    var name = response.data[i].firstname +' '+response.data[i].lastname
+				    
+				    newCell.innerHTML = "<div class='d-flex '><img src="+'resources/images/profile/'+response.data[i].profile_image+" class='rounded-circle'/><div class='ms-3'><p class='fw-bold mb-1'>"+name+"</p><p class='text-muted mb-0'>"+response.data[i].email+"</p></div></div>"
+				    newCell0.innerHTML = "<p>"+response.data[i].internship_name+"</p>"
+				    
+				    var cell1 = ''
+					    
+				    if(response.data[i].internship_status == "ผ่านการฝึกงานแล้ว") {
+				    	
+				    	cell1 = "<span class='badge badge-success rounded-pill d-inline'>"+response.data[i].internship_status+"</span>"
+				    	
+				    }else if(response.data[i].internship_status == "กำลังฝึกงาน") {
+				    	
+				    	cell1 = "<span class='badge badge-warning rounded-pill d-inline'>"+response.data[i].internship_status+"</span>"
+				    	
+				    }
+				    
+				    
+				    newCell1.innerHTML = cell1
+				    
+				    newRow.append(newCell)
+				    newRow.append(newCell0)
+				    newRow.append(newCell1)
+				    document.getElementById("userData").appendChild(newRow)
+					    
+	            });
+				
+				$('#userDataTable').dataTable( {
+					"aaSorting": []
+				});
+				
+					
+			  })
+			  .catch(function (response) {
+				  Swal.fire({
+					  icon: 'error',
+					  title: 'ไม่สามารถทำรายการได้ในขณะนี้',
+					  showConfirmButton: false,
+					  timer: 3000
+					})
+			  });
+		
+		/* $('#userDataTable').dataTable( {
 			"aaSorting": []
-		});
+		}); */
 		
 		axios({
 			  method: "post",
@@ -445,7 +510,6 @@
 					aValues.push(response.data[i].internship_name)
 					bValues.push(response.data[i].role1_count)
 					
-					$('#internshipSelect').append($('<option value="' + response.data[i].internship_id + '">' + response.data[i].internship_name + '</option>'));
 				})
 				
 
@@ -462,7 +526,10 @@
 						title: {
 							display: true,
 							text: "จำนวนนิสิต/นักศึกษาที่กำลังฝึกงานและฝึกงานแล้วในแต่ละสถานที่ฝึกงาน"
-						}
+						},
+						legend: {
+					         display: false 
+					      }
 					}
 				});
 					
@@ -475,208 +542,87 @@
 					timer: 3000
 				})
 			  });
+		
+		axios({
+			  method: "post",
+			  url: "findYearOfTerm",
+			}).then(function (response) {
+				$.each(response.data, function(i, data) {
+					 $('#insertYear').append($('<option value="' + response.data[i].year + '">' + response.data[i].year + '</option>'));
+				 });
+				
+			  })
+			  .catch(function (response) {
+				Swal.fire({
+					icon: 'error',
+					title: 'ไม่สามารถทำรายการได้ในขณะนี้',
+					showConfirmButton: false,
+					timer: 3000
+				})
+			  });
 			
 	});
 	
-	var b = ''
-	var e = ''
-	
-	
-	$('#internshipSelect').change(async function() {
+	$('#insertYear').change(function() {
 		
-		await setFormat()
+		var e = document.getElementById("insertYear");
+		var year = e.options[e.selectedIndex].value;
 		
-		if(b != '' && e != '') {
-			
-			var x = document.getElementById("internshipSelect");
-			var internship = x.options[x.selectedIndex].value;
-			
-			if(internship != '') {
-				
-				axios({
-					  method: "post",
-					  url: "getStudentStatisticsInternshipingData",
-					  data: "internship_id="+internship+"&begin="+b+"&end="+e,
-					}).then(function (response) {
-						
-						$("#userDataTable").DataTable().clear().draw();
-				        $("#userDataTable").dataTable().fnDestroy();
-				        
-						$.each(response.data, function(i, data) {
-							
-							var newRow = document.createElement("tr")
-							var newCell = document.createElement("td")
-							var newCell0 = document.createElement("td")
-						    
-						    var name = response.data[i].firstname +' '+response.data[i].lastname
-						    
-						    newCell.innerHTML = "<div class='d-flex '><img src="+'resources/images/profile/'+response.data[i].profile_image+" class='rounded-circle'/><div class='ms-3'><p class='fw-bold mb-1'>"+name+"</p><p class='text-muted mb-0'>"+response.data[i].email+"</p></div></div>"
-						    newCell0.innerHTML = "<p>"+response.data[i].time_reg+"</p>"
-						    
-						    newRow.append(newCell)
-						    newRow.append(newCell0)
-						    document.getElementById("userData").appendChild(newRow)
-							    
-			            });
-						
-						$('#userDataTable').dataTable( {
-							"aaSorting": []
-						});
-						
-							
-					  })
-					  .catch(function (response) {
-						  Swal.fire({
-							  icon: 'error',
-							  title: 'ไม่สามารถทำรายการได้ในขณะนี้',
-							  showConfirmButton: false,
-							  timer: 3000
-							})
-					  });
-			
-		} 
-		
-		
-	} else if(b == '' && e == ''){
-		
-		var x = document.getElementById("internshipSelect");
-		var internship = x.options[x.selectedIndex].value;
-		
-		if(internship != '') {
+		if(year != '' && year != '0') {
 			
 			axios({
 				  method: "post",
-				  url: "getStudentStatisticsInternshipingData",
-				  data: "internship_id="+internship,
+				  url: "findTermByYear",
+				  data: "year="+year,
 				}).then(function (response) {
 					
-					$("#userDataTable").DataTable().clear().draw();
-			        $("#userDataTable").dataTable().fnDestroy();
-			        
+					$("#insertTermNo").empty();
+					$('#insertTermNo').append('<option value="0">เทอม</option>')
+					
 					$.each(response.data, function(i, data) {
 						
-						var newRow = document.createElement("tr")
-						var newCell = document.createElement("td")
-						var newCell0 = document.createElement("td")
-					    
-					    var name = response.data[i].firstname +' '+response.data[i].lastname
-					    
-					    newCell.innerHTML = "<div class='d-flex '><img src="+'resources/images/profile/'+response.data[i].profile_image+" class='rounded-circle'/><div class='ms-3'><p class='fw-bold mb-1'>"+name+"</p><p class='text-muted mb-0'>"+response.data[i].email+"</p></div></div>"
-					    newCell0.innerHTML = "<p>"+response.data[i].time_reg+"</p>"
-					    
-					    newRow.append(newCell)
-					    newRow.append(newCell0)
-					    document.getElementById("userData").appendChild(newRow)
-						    
-		            });
+		           		$('#insertTermNo').append($('<option value="' + response.data[i].term_no + '">' + response.data[i].term_no + '</option>'));
+		       		});
 					
-					$('#userDataTable').dataTable( {
-						"aaSorting": []
-					});
-					
-						
 				  })
 				  .catch(function (response) {
-					  Swal.fire({
-						  icon: 'error',
-						  title: 'ไม่สามารถทำรายการได้ในขณะนี้',
-						  showConfirmButton: false,
-						  timer: 3000
-						})
+					Swal.fire({
+						icon: 'error',
+						title: 'ไม่สามารถทำรายการได้ในขณะนี้',
+						showConfirmButton: false,
+						timer: 3000
+					})
 				  });
+			
+		} else {
+			
+			$("#insertTermNo").empty();
+			$('#insertTermNo').append('<option value="0">เทอม</option>')
+			
 		}
 		
-	}
-	
+		
+		
 	});
 	
-	async function setFormat() {
-		
-		const monthENG = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-		
-		var begin = document.getElementById('input_from').value
-		var end = document.getElementById('input_to').value
-		
-		const beginArray = begin.split(" ");
-		const endArray = end.split(" ");
-		
-		var begin_day = beginArray[0]
-		var end_day = endArray[0]
-		
-		var begin_year = beginArray[2]
-		var end_year = endArray[2]
-		
-		if(begin_day < 10) {
-			begin_day = '0'+ begin_day
-		}
-		
-		if(end_day < 10) {
-			end_day = '0'+ end_day
-		}
-		
-		if(beginArray[1] != undefined && endArray[1] != undefined) {
-			
-			var month = await setFormatStringToIndex(beginArray[1].replace(",", ""), endArray[1].replace(",", ""), monthENG)
-			var begin_month = month[0]
-			var end_month = month[1]
-			
-			b = begin_year +'-'+ begin_month +'-'+ begin_day
-			e = end_year +'-'+ end_month +'-'+ end_day
-			
-		} /* else {
-			
-			Swal.fire({
-				icon: 'warning',
-				title: 'กรุณาเลือกวันที่',
-				showConfirmButton: false,
-				timer: 3000
-			})
-			
-			$(':button').prop('disabled', false);
-		} */
-
-			
-		
-	}
-	
-	function setFormatStringToIndex(begin_month, end_month, monthENG) {
-		
-		for(var i = 0; i < monthENG.length; i++) {
-					
-				if(begin_month == monthENG[i]) {
-					begin_month = i+1
-					
-					if(begin_month < 10) {
-						begin_month = '0'+ begin_month
-					}
-				}
-				
-				if(end_month == monthENG[i]) {
-					end_month = i+1
-					
-					if(end_month < 10) {
-						end_month = '0'+ end_month
-					}
-				}
-		}
-		
-		return([begin_month, end_month])
-	}
-	
-	async function searchData() {
+	function searchData() {
 		
 		document.getElementById('spinner').style.display = 'block';
 		$("#internshipSelect").val('0').change();
 		$(':button').prop('disabled', true);
 		
-		await setFormat()
+		var q = document.getElementById("insertYear");
+		var year = q.options[q.selectedIndex].value;
 		
-		if(b != '' && e != '') {
+		var w = document.getElementById("insertTermNo");
+		var term = w.options[w.selectedIndex].value;
+		
+		if(year != '' && year != '0' && term != '' && term != '0') {
 			
 			axios({
 				  method: "post",
 				  url: "getStatisticsInternshipCompleteDataCardFilter",
-				  data: 'begin=' + b + '&end=' + e,
+				  data: 'year=' + year + '&term=' + term,
 				}).then(function (response) {
 					
 					document.getElementById('userStatus2').innerHTML = response.data.role1_internshiping + ' คน'
@@ -701,7 +647,7 @@
 			axios({
 				  method: "post",
 				  url: "getStatisticsInternshipingDataDonutFilter",
-				  data: 'begin=' + b + '&end=' + e,
+				  data: 'year=' + year + '&term=' + term,
 				}).then(function (response) {
 					
 					$(':button').prop('disabled', false);
@@ -937,7 +883,10 @@
 							title: {
 								display: true,
 								text: "จำนวนนิสิต/นักศึกษาที่กำลังฝึกงานและฝึกงานแล้วในแต่ละสถานที่ฝึกงาน"
-							}
+							},
+							legend: {
+						         display: false 
+						      }
 						}
 					});
 						
@@ -953,10 +902,67 @@
 					document.getElementById('spinner').style.display = 'none';
 				  });
 			
+			axios({
+				  method: "post",
+				  url: "getStudentStatisticsInternshipingData",
+				  data: 'year=' + year + '&term=' + term,
+				}).then(function (response) {
+					
+					$("#userDataTable").DataTable().clear().draw();
+			        $("#userDataTable").dataTable().fnDestroy();
+			        
+					$.each(response.data, function(i, data) {
+						
+						var newRow = document.createElement("tr")
+						var newCell = document.createElement("td")
+						var newCell0 = document.createElement("td")
+						var newCell1 = document.createElement("td")
+					    
+					    var name = response.data[i].firstname +' '+response.data[i].lastname
+					    
+					    newCell.innerHTML = "<div class='d-flex '><img src="+'resources/images/profile/'+response.data[i].profile_image+" class='rounded-circle'/><div class='ms-3'><p class='fw-bold mb-1'>"+name+"</p><p class='text-muted mb-0'>"+response.data[i].email+"</p></div></div>"
+					    newCell0.innerHTML = "<p>"+response.data[i].internship_name+"</p>"
+					    var cell1 = ''
+						    
+						    if(response.data[i].internship_status == "ผ่านการฝึกงานแล้ว") {
+						    	
+						    	cell1 = "<span class='badge badge-success rounded-pill d-inline'>"+response.data[i].internship_status+"</span>"
+						    	
+						    }else if(response.data[i].internship_status == "กำลังฝึกงาน") {
+						    	
+						    	cell1 = "<span class='badge badge-warning rounded-pill d-inline'>"+response.data[i].internship_status+"</span>"
+						    	
+						    }
+						    
+						    
+						    newCell1.innerHTML = cell1
+					    
+					    newRow.append(newCell)
+					    newRow.append(newCell0)
+					    newRow.append(newCell1)
+					    document.getElementById("userData").appendChild(newRow)
+						    
+		            });
+					
+					$('#userDataTable').dataTable( {
+						"aaSorting": []
+					});
+					
+						
+				  })
+				  .catch(function (response) {
+					  Swal.fire({
+						  icon: 'error',
+						  title: 'ไม่สามารถทำรายการได้ในขณะนี้',
+						  showConfirmButton: false,
+						  timer: 3000
+						})
+				  });
+			
 		} else {
 			Swal.fire({
 				icon: 'warning',
-				title: 'กรุณาเลือกวันที่',
+				title: 'กรุณาเลือกปีการศึกษาและเทอม',
 				showConfirmButton: false,
 				timer: 3000
 			})
@@ -964,6 +970,7 @@
 			$(':button').prop('disabled', false);
 			document.getElementById('spinner').style.display = 'none';
 		}
+		
 		
 		
 	}

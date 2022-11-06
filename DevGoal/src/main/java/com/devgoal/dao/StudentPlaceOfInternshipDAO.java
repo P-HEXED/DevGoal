@@ -338,40 +338,77 @@ public class StudentPlaceOfInternshipDAO implements DAO<StudentPlaceOfInternship
 	
 	public ArrayList<HashMap<String, Object>> queryStudentCountInternshiping(String user_id) {
 		
-		String sql = "SELECT	\n" +
-				"	place_of_internship.place_of_internship_id AS internship_id,\n" +
-				"	place_of_internship.name AS internship_name,\n" +
-				"	(SELECT COUNT(student_place_of_internship.student_place_of_internship_id)\n" +
-				"	\n" +
-				"	FROM student_place_of_internship \n" +
-				"	\n" +
-				"	INNER JOIN place_of_internship ON place_of_internship.place_of_internship_id = student_place_of_internship.place_of_internship_id \n" +
-				"	\n" +
-				"	WHERE student_place_of_internship.status = 1 \n" +
-				"	AND place_of_internship.name = internship_name) AS role1_count\n" +
-				"	\n" +
-				"FROM place_of_internship\n" +
+		String sql = "SELECT	 \n" +
+				"place_of_internship.place_of_internship_id AS internship_id, \n" +
+				"place_of_internship.name AS internship_name, \n" +
+				"(SELECT COUNT(student_place_of_internship.student_place_of_internship_id) \n" +
+				" \n" +
+				"FROM student_place_of_internship  \n" +
+				" \n" +
+				"INNER JOIN place_of_internship ON place_of_internship.place_of_internship_id = student_place_of_internship.place_of_internship_id  \n" +
+				" \n" +
+				"WHERE student_place_of_internship.status = 1  \n" +
+				"AND student_place_of_internship.send_status = 1\n" +
+				"AND place_of_internship.name = internship_name) AS role1_count \n" +
+				" \n" +
+				"FROM place_of_internship \n" +
 				"WHERE place_of_internship.status = 1 AND place_of_internship.user_id = ?";
 		String[] data = {user_id};	
 		
 		return db.queryListWithPrepare(sql, data);
 	}
 	
-	public ArrayList<HashMap<String, Object>> queryStudentDataInternshipForAssessment(String internship_id) {
+	public ArrayList<HashMap<String, Object>> queryStudentDataInternshipForAssessment(String term_id) {
 		
-		String sql = "SELECT \n" +
-				"	user.profile_image,\n" +
-				"	user.firstname,\n" +
-				"	user.lastname,\n" +
-				"	user.email,\n" +
-				"	student_place_of_internship.time_reg\n" +
+		String sql = "SELECT   \n" +
+				"	user.profile_image,  \n" +
+				"	user.firstname,  \n" +
+				"	user.lastname,  \n" +
+				"	user.email,  \n" +
+				"	place_of_internship.name AS internship_name,\n" +
 				"	\n" +
-				"FROM student_place_of_internship\n" +
-				"INNER JOIN user ON user.user_id = student_place_of_internship.user_id\n" +
-				"WHERE student_place_of_internship.status = 1 AND student_place_of_internship.place_of_internship_id = ?";
-		String[] data = {internship_id};
+				"	CASE\n" +
+				"	\n" +
+				"		WHEN (SELECT student_place_of_internship.student_place_of_internship_id IN (SELECT assessment_internship.student_place_of_internship_id FROM assessment_internship)) >= 1 THEN 'ผ่านการฝึกงานแล้ว'\n" +
+				"		WHEN (SELECT student_place_of_internship.student_place_of_internship_id IN (SELECT assessment_internship.student_place_of_internship_id FROM assessment_internship)) = 0 THEN 'กำลังฝึกงาน'\n" +
+				"		\n" +
+				"	END AS internship_status\n" +
+				"	\n" +
+				"	\n" +
+				"		\n" +
+				"FROM student_place_of_internship  \n" +
+				"INNER JOIN user ON user.user_id = student_place_of_internship.user_id  \n" +
+				"INNER JOIN place_of_internship ON place_of_internship.place_of_internship_id = student_place_of_internship.place_of_internship_id\n" +
+				"WHERE student_place_of_internship.status = 1 AND student_place_of_internship.send_status = 1 AND student_place_of_internship.term_id = ?";
+		String[] data = {term_id};
 		
 		return db.queryListWithPrepare(sql, data);
+	}
+	
+	public ArrayList<HashMap<String, Object>> queryStudentDataInternshipForAssessmentNoFilter() {
+		
+		String sql = "SELECT   \n" +
+				"	user.profile_image,  \n" +
+				"	user.firstname,  \n" +
+				"	user.lastname,  \n" +
+				"	user.email,  \n" +
+				"	place_of_internship.name AS internship_name,\n" +
+				"	\n" +
+				"	CASE\n" +
+				"	\n" +
+				"		WHEN (SELECT student_place_of_internship.student_place_of_internship_id IN (SELECT assessment_internship.student_place_of_internship_id FROM assessment_internship)) >= 1 THEN 'ผ่านการฝึกงานแล้ว'\n" +
+				"		WHEN (SELECT student_place_of_internship.student_place_of_internship_id IN (SELECT assessment_internship.student_place_of_internship_id FROM assessment_internship)) = 0 THEN 'กำลังฝึกงาน'\n" +
+				"		\n" +
+				"	END AS internship_status\n" +
+				"	\n" +
+				"	\n" +
+				"		\n" +
+				"FROM student_place_of_internship  \n" +
+				"INNER JOIN user ON user.user_id = student_place_of_internship.user_id  \n" +
+				"INNER JOIN place_of_internship ON place_of_internship.place_of_internship_id = student_place_of_internship.place_of_internship_id\n" +
+				"WHERE student_place_of_internship.status = 1 AND student_place_of_internship.send_status = 1";
+		
+		return db.queryList(sql);
 	}
 	
 	public ArrayList<HashMap<String, Object>> queryStudentDataInternshipForAssessmentFilterDate(String internship_id, String begin, String end) {
@@ -393,24 +430,25 @@ public class StudentPlaceOfInternshipDAO implements DAO<StudentPlaceOfInternship
 		return db.queryListWithPrepare(sql, data);
 	}
 	
-	public ArrayList<HashMap<String, Object>> queryStudentCountInternshipingFilter(String user_id, String begin, String end) {
+	public ArrayList<HashMap<String, Object>> queryStudentCountInternshipingFilter(String user_id, String term_id) {
 		
-		String sql = "SELECT	 \n" +
-				"place_of_internship.place_of_internship_id AS internship_id, \n" +
-				"place_of_internship.name AS internship_name, \n" +
-				"(SELECT COUNT(student_place_of_internship.student_place_of_internship_id) \n" +
-				" \n" +
-				"FROM student_place_of_internship  \n" +
-				" \n" +
-				"INNER JOIN place_of_internship ON place_of_internship.place_of_internship_id = student_place_of_internship.place_of_internship_id  \n" +
-				" \n" +
-				"WHERE student_place_of_internship.status = 1  \n" +
-				"AND place_of_internship.name = internship_name\n" +
-				"AND student_place_of_internship.time_reg BETWEEN ? AND ?) AS role1_count \n" +
-				" \n" +
-				"FROM place_of_internship \n" +
+		String sql = "SELECT	  \n" +
+				"place_of_internship.place_of_internship_id AS internship_id,  \n" +
+				"place_of_internship.name AS internship_name,  \n" +
+				"(SELECT COUNT(student_place_of_internship.student_place_of_internship_id)  \n" +
+				"	\n" +
+				"FROM student_place_of_internship   \n" +
+				"	\n" +
+				"INNER JOIN place_of_internship ON place_of_internship.place_of_internship_id = student_place_of_internship.place_of_internship_id   \n" +
+				"	\n" +
+				"WHERE student_place_of_internship.status = 1   \n" +
+				"AND student_place_of_internship.send_status = 1\n" +
+				"AND place_of_internship.name = internship_name \n" +
+				"AND student_place_of_internship.term_id = ?) AS role1_count  \n" +
+				"	\n" +
+				"FROM place_of_internship  \n" +
 				"WHERE place_of_internship.status = 1 AND place_of_internship.user_id = ?";
-		String[] data = {begin, end, user_id};	
+		String[] data = {term_id, user_id};	
 		
 		return db.queryListWithPrepare(sql, data);
 	}

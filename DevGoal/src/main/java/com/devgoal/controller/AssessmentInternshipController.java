@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.devgoal.dao.AssessmentInternshipDetDAO;
 import com.devgoal.dao.StudentPlaceOfInternshipDAO;
+import com.devgoal.dao.TermDAO;
 
 @Controller
 public class AssessmentInternshipController {
@@ -188,44 +189,74 @@ public class AssessmentInternshipController {
 		
 		if(sessionStatus == 0 && session.getAttribute("role").toString().equals("2")) {
 			
-			String internship_id = request.getParameter("internship_id");
-			String begin = request.getParameter("begin");
-			String end = request.getParameter("end");
+			String year = request.getParameter("year");
+			String term = request.getParameter("term");
 			
 			
-			if(internship_id != null && !internship_id.equals("") && begin == null && end == null) {
-
-				ArrayList<HashMap<String, Object>> role1InternshipData = new StudentPlaceOfInternshipDAO().queryStudentDataInternshipForAssessment(internship_id);
+			if(year != null && !year.equals("") && !year.equals("0") && term != null && !term.equals("") && !term.equals("0")) {
 				
-				for(int i = 0; i < role1InternshipData.size(); i++) {
-					jsonObject = new JSONObject();
-					jsonObject.put("profile_image", role1InternshipData.get(i).get("profile_image"));
-					jsonObject.put("firstname", role1InternshipData.get(i).get("firstname"));
-					jsonObject.put("lastname", role1InternshipData.get(i).get("lastname"));
-					jsonObject.put("email", role1InternshipData.get(i).get("email"));
-					jsonObject.put("time_reg", role1InternshipData.get(i).get("time_reg"));
+				HashMap<String, Object> term_id = new TermDAO().queryTermId(year, term);
+				
+				if(term_id != null) {
+
+					ArrayList<HashMap<String, Object>> role1InternshipData = new StudentPlaceOfInternshipDAO().queryStudentDataInternshipForAssessment(term_id.get("term_id").toString());
 					
-					jsonArray.put(jsonObject);
-					
+					for(int i = 0; i < role1InternshipData.size(); i++) {
+						jsonObject = new JSONObject();
+						jsonObject.put("profile_image", role1InternshipData.get(i).get("profile_image"));
+						jsonObject.put("firstname", role1InternshipData.get(i).get("firstname"));
+						jsonObject.put("lastname", role1InternshipData.get(i).get("lastname"));
+						jsonObject.put("email", role1InternshipData.get(i).get("email"));
+						jsonObject.put("time_reg", role1InternshipData.get(i).get("time_reg"));
+						jsonObject.put("internship_name", role1InternshipData.get(i).get("internship_name"));
+						jsonObject.put("internship_status", role1InternshipData.get(i).get("internship_status"));
+						
+						jsonArray.put(jsonObject);
+						
+					}
 				}
 				
-			} else if(internship_id != null && !internship_id.equals("") && begin != null && !begin.equals("") && end != null && !end.equals("")) {
+			} 
+			
+		}
+		
+		etc.responseJSONArray(jsonArray, response);
 
-				ArrayList<HashMap<String, Object>> role1InternshipData = new StudentPlaceOfInternshipDAO().queryStudentDataInternshipForAssessmentFilterDate(internship_id, begin, end);
+	}
+	
+	@RequestMapping(value = "/getStudentStatisticsInternshipingDataNoFilter", method = RequestMethod.POST)
+	@ResponseBody
+	public void getStudentStatisticsInternshipingDataNoFilter(HttpSession session, HttpServletRequest request,
+			HttpServletResponse response) throws JSONException, IOException, ServletException {
+		response.setContentType("text/html;charset=UTF-8");
+		request.setCharacterEncoding("UTF-8");
+
+		EtcMethods etc = new EtcMethods();
+		
+		JSONArray jsonArray = new JSONArray();
+		JSONObject jsonObject = null;
+		
+		session = request.getSession(false); 
+		int sessionStatus = new EtcMethods().checkSession(session, request);
+		
+		if(sessionStatus == 0 && session.getAttribute("role").toString().equals("2")) {
+			
+			ArrayList<HashMap<String, Object>> role1InternshipData = new StudentPlaceOfInternshipDAO().queryStudentDataInternshipForAssessmentNoFilter();
+			
+			for(int i = 0; i < role1InternshipData.size(); i++) {
+				jsonObject = new JSONObject();
+				jsonObject.put("profile_image", role1InternshipData.get(i).get("profile_image"));
+				jsonObject.put("firstname", role1InternshipData.get(i).get("firstname"));
+				jsonObject.put("lastname", role1InternshipData.get(i).get("lastname"));
+				jsonObject.put("email", role1InternshipData.get(i).get("email"));
+				jsonObject.put("time_reg", role1InternshipData.get(i).get("time_reg"));
+				jsonObject.put("internship_name", role1InternshipData.get(i).get("internship_name"));
+				jsonObject.put("internship_status", role1InternshipData.get(i).get("internship_status"));
 				
-				for(int i = 0; i < role1InternshipData.size(); i++) {
-					jsonObject = new JSONObject();
-					jsonObject.put("profile_image", role1InternshipData.get(i).get("profile_image"));
-					jsonObject.put("firstname", role1InternshipData.get(i).get("firstname"));
-					jsonObject.put("lastname", role1InternshipData.get(i).get("lastname"));
-					jsonObject.put("email", role1InternshipData.get(i).get("email"));
-					jsonObject.put("time_reg", role1InternshipData.get(i).get("time_reg"));
-					
-					jsonArray.put(jsonObject);
-					
-				}
+				jsonArray.put(jsonObject);
 				
 			}
+				
 			
 		}
 		
@@ -243,24 +274,31 @@ public class AssessmentInternshipController {
 
 		EtcMethods etc = new EtcMethods();
 
-		JSONObject jsonObject = null;
+		JSONObject jsonObject = new JSONObject();
 		
 		session = request.getSession(false); 
 		int sessionStatus = new EtcMethods().checkSession(session, request);
 		
 		if(sessionStatus == 0 && session.getAttribute("role").toString().equals("2")) {
 			
-			String begin = request.getParameter("begin");
-			String end = request.getParameter("end");
+			String year = request.getParameter("year");
+			String term = request.getParameter("term");
 			
-			if(begin != null && !begin.equals("") && end != null && !end.equals("")) {
+			if(year != null && !year.equals("") && !year.equals("0") && term != null && !term.equals("") && !term.equals("0")) {
 				
-				HashMap<String, Object> role1InternshipComplete = new AssessmentInternshipDetDAO().queryStudentInternshipCompleteFilter(session.getAttribute("id").toString(), begin, end);
-				HashMap<String, Object> role1Internshiping = new AssessmentInternshipDetDAO().queryStudentInternshipingFilter(session.getAttribute("id").toString(), begin, end);
 				
-				jsonObject = new JSONObject();
-				jsonObject.put("role1_complete", role1InternshipComplete.get("role1_complete"));
-				jsonObject.put("role1_internshiping", role1Internshiping.get("role1_internshiping"));
+				HashMap<String, Object> term_id = new TermDAO().queryTermId(year, term);
+				
+				if(term_id != null) {
+					
+					HashMap<String, Object> role1InternshipComplete = new AssessmentInternshipDetDAO().queryStudentInternshipCompleteFilter(session.getAttribute("id").toString(), term_id.get("term_id").toString());
+					HashMap<String, Object> role1Internshiping = new AssessmentInternshipDetDAO().queryStudentInternshipingFilter(session.getAttribute("id").toString(), term_id.get("term_id").toString());
+					
+					jsonObject.put("role1_complete", role1InternshipComplete.get("role1_complete"));
+					jsonObject.put("role1_internshiping", role1Internshiping.get("role1_internshiping"));
+				}
+				
+				
 			}
 			
 			
@@ -287,22 +325,29 @@ public class AssessmentInternshipController {
 		
 		if(sessionStatus == 0 && session.getAttribute("role").toString().equals("2")) {
 			
-			String begin = request.getParameter("begin");
-			String end = request.getParameter("end");
+			String year = request.getParameter("year");
+			String term = request.getParameter("term");
 			
-			if(begin != null && !begin.equals("") && end != null && !end.equals("")) {
+			if(year != null && !year.equals("") && !year.equals("0") && term != null && !term.equals("") && !term.equals("0")) {
 				
-				ArrayList<HashMap<String, Object>> role1Internshiping = new StudentPlaceOfInternshipDAO().queryStudentCountInternshipingFilter(session.getAttribute("id").toString(), begin, end);
+				HashMap<String, Object> term_id = new TermDAO().queryTermId(year, term);
 				
-				for(int i = 0; i < role1Internshiping.size(); i++) {
-					jsonObject = new JSONObject();
-					jsonObject.put("internship_id", role1Internshiping.get(i).get("internship_id"));
-					jsonObject.put("internship_name", role1Internshiping.get(i).get("internship_name"));
-					jsonObject.put("role1_count", role1Internshiping.get(i).get("role1_count"));
+				if(term_id != null) {
 					
-					jsonArray.put(jsonObject);
+					ArrayList<HashMap<String, Object>> role1Internshiping = new StudentPlaceOfInternshipDAO().queryStudentCountInternshipingFilter(session.getAttribute("id").toString(), term_id.get("term_id").toString());
 					
+					for(int i = 0; i < role1Internshiping.size(); i++) {
+						jsonObject = new JSONObject();
+						jsonObject.put("internship_id", role1Internshiping.get(i).get("internship_id"));
+						jsonObject.put("internship_name", role1Internshiping.get(i).get("internship_name"));
+						jsonObject.put("role1_count", role1Internshiping.get(i).get("role1_count"));
+						
+						jsonArray.put(jsonObject);
+						
+					}
 				}
+				
+				
 				
 			}
 			
