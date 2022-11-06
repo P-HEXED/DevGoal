@@ -26,14 +26,11 @@ p {
 	font-size: 14px;
 }
 
-@media ( min-width :768px) and (max-width:912px) {
-	.card-body {
-		margin-top: 50px;
-		margin-bottom: 50px;
+@media ( max-width :913px) {
+	#head{
+		margin-top:20px; 
+		margin-left:10px;
 	}
-}
-
-@media ( max-width :912px) {
 	.card, .card-body {
 		text-align: center;
 	}
@@ -43,17 +40,10 @@ p {
 }
 
 @media ( max-width :765px) {
-	.card-date {
-		margin-top: 45px;
+	#head{
+		margin-top:50px; 
+		margin-left:10px;
 	}
-}
-
-#smallcard01, #smallcard02, #smallcard03, #datecard {
-	align-items: stretch;
-}
-
-#smallcard01 {
-	border-right: 5px solid #d9534f;
 }
 
 #smallcard02 {
@@ -80,10 +70,12 @@ p {
 				<i class="fa-solid fa-list"></i>
 			</button>
 			
-			<div class="row">
-				<h4>สถิติการฝึกงาน</h4>
+			<div class="row table-responsive">
+			
 				<div class="col-lg-5 col-sm-12 col-md-12">
+				<h4 id="head">สถิติการฝึกงาน</h4>
 					<div class="card card-date">
+		
 						<div class="row">
 
 							<div class="col-sm-12 col-md-6 col-lg-6">
@@ -98,7 +90,7 @@ p {
 								</select>
 							</div>
 							
-							<div class="col-sm-12 col-md-6 col-lg-2">
+							<div class="col-sm-12 col-md-12 col-lg-2">
 								<button type="button" onClick="searchData()" class='btn btn-primary' id="search" style="float: right;">ค้นหา</button>
 							</div>
 							
