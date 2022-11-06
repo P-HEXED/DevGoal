@@ -58,6 +58,7 @@
         <div class="table-container table-responsive">
             <div class="row abovetable "> 
                 <h4>ข้อมูลการฝึกงานแต่ละวันของนิสิต/นักศึกษา</h4>
+                <span style="color: red;">*หากต้องการดูข้อมูลรายเทอม ให้ใส่ข้อมูลช่อง Search ปีการศึกษา/เทอม (เช่น 2565/1)</span>
                 </div> 
                 <div class="table-overflow">
                 <table class="table text-center" id="userDataTable">
@@ -66,6 +67,7 @@
                       <th>ชื่อ - นามสกุล</th>
                       <th>มหาวิทยาลัย</th>
                       <th>สถานที่ฝึกงาน</th>
+                      <th>เทอม</th>
                       <th>วันที่ดำเนินการฝึกงาน</th>
                       <th></th>
                     </tr>
@@ -85,26 +87,31 @@
               </div>
               <div class="modal-body">
                     <div class="row">
-                      <div class="col-lg-3 col-lg-3 col-lg-3">
+                      <div class="col-lg-3">
                         <img id="notifyImage" src="" alt="personal picture" style="width: 250px;height: 250px; border-radius:20%;">
                       </div>
                       
-                       <div class="col-lg-3 col-lg-3 col-lg-3">
+                       <div class="col-lg-3">
                       	<label for="comment">มหาวิทยาลัย</label>
                       	<input class="form-control" id="universityModal" type="text" disabled></input>
                        </div>
                        
-                      	<div class="col-lg-3 col-lg-3 col-lg-3">
+                      	<div class="col-lg-3">
                       	 <label for="comment">สถานที่ฝึกงาน</label>
 	                  	 <input class="form-control" id="internshipModal" type="text" disabled></input>
 	                  	</div>
 	                  	
-	                  	<div class="col-lg-3 col-lg-3 col-lg-3">
+	                  	<div class="col-lg-3">
 		                  	<label for="comment">วันที่ดำเนินการฝึกงาน</label>
 		                  	<input class="form-control" id="timeReg" type="text" disabled></input>
                        </div>
-                     
+                       
                       </div>    
+                      <br>
+                      <div class="col-lg-2">
+		                  	<label for="comment">ปีการศึกษา/เทอม</label>
+		                  	<input class="form-control" id="termModal" type="text" disabled></input>
+                       </div>
                       
                       <hr>
                       
@@ -154,14 +161,16 @@ $(function() {
 				    var newCell2 = document.createElement("td")
 				    var newCell3 = document.createElement("td")
 				    var newCell4 = document.createElement("td")
+				    var newCell5 = document.createElement("td")
 				    
 				    var name = response.data[i].firstname +' '+response.data[i].lastname
 				    
 				    newCell0.innerHTML = "<div class='d-flex '><img src="+'resources/images/profile/'+response.data[i].profile_image+" class='rounded-circle'/><div class='ms-3'><p class='fw-bold mb-1'>"+name+"</p></div></div>"
 				    newCell1.innerHTML = "<p class='fw-normal mb-1'>"+response.data[i].university_name+"</p>"
 				    newCell2.innerHTML = "<p>"+response.data[i].internship_name+"</p>"
-				    newCell3.innerHTML = "<p>"+response.data[i].time_reg+"</p>"
-				    newCell4.innerHTML = "<button onClick='SendNotify(\""+name+"\",\""+ response.data[i].profile_image+"\",\""+ response.data[i].university_name+"\",\""+ response.data[i].internship_name+"\",\""+ response.data[i].time_reg+"\",\""+ response.data[i].std_internship_id+"\")' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#sendnotify'>รายละเอียด</button>"
+				    newCell3.innerHTML = "<p>"+response.data[i].term+"</p>"
+				    newCell4.innerHTML = "<p>"+response.data[i].time_reg+"</p>"
+				    newCell5.innerHTML = "<button onClick='SendNotify(\""+name+"\",\""+ response.data[i].profile_image+"\",\""+ response.data[i].university_name+"\",\""+ response.data[i].internship_name+"\",\""+ response.data[i].time_reg+"\",\""+ response.data[i].std_internship_id+"\",\""+ response.data[i].term+"\")' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#sendnotify'>รายละเอียด</button>"
 				    
 				    
 				    newRow.append(newCell0)
@@ -169,6 +178,7 @@ $(function() {
 				    newRow.append(newCell2)
 				    newRow.append(newCell3)
 				    newRow.append(newCell4)
+				    newRow.append(newCell5)
 				    document.getElementById("userData").appendChild(newRow)
 				    
             });
@@ -190,12 +200,13 @@ $(function() {
 	});
 	
 				
-	function SendNotify(name, profile_image, university_name, internship_name, time_reg, std_internship_id) {
+	function SendNotify(name, profile_image, university_name, internship_name, time_reg, std_internship_id, term) {
 		document.getElementById('notifyName').innerHTML = name
 		document.getElementById("notifyImage").src = "resources/images/profile/"+profile_image
 		document.getElementById('universityModal').value = university_name
 		document.getElementById('internshipModal').value = internship_name
 		document.getElementById('timeReg').value = time_reg
+		document.getElementById('termModal').value = term
 		
 		axios({
 			  method: "post",

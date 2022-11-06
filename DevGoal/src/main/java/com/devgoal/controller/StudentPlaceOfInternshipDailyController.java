@@ -131,6 +131,7 @@ public class StudentPlaceOfInternshipDailyController {
 				jsonObject.put("internship_name", userData.get(i).get("internship_name"));
 				jsonObject.put("time_reg", userData.get(i).get("time_reg"));
 				jsonObject.put("profile_image", userData.get(i).get("profile_image"));
+				jsonObject.put("term", userData.get(i).get("term"));
 
 				jsonArray.put(jsonObject);
 			}

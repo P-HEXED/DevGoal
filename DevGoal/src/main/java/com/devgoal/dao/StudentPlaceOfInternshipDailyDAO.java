@@ -21,23 +21,25 @@ public class StudentPlaceOfInternshipDailyDAO implements DAO<StudentPlaceOfInter
 	
 	public ArrayList<HashMap<String, Object>> internshipDataRole2(String user_id) {
 		
-		String sql = "SELECT	\n" +
-				"	student_place_of_internship.student_place_of_internship_id AS std_internship_id,\n" +
-				"	\n" +
-				"	(SELECT user.profile_image FROM student_place_of_internship INNER JOIN user ON user.user_id = student_place_of_internship.user_id WHERE student_place_of_internship.student_place_of_internship_id = std_internship_id) profile_image,\n" +
-				"	\n" +
-				"	(SELECT user.firstname FROM student_place_of_internship INNER JOIN user ON user.user_id = student_place_of_internship.user_id WHERE student_place_of_internship.student_place_of_internship_id = std_internship_id) firstname,\n" +
-				"	\n" +
-				"	(SELECT user.lastname FROM student_place_of_internship INNER JOIN user ON user.user_id = student_place_of_internship.user_id WHERE student_place_of_internship.student_place_of_internship_id = std_internship_id) lastname,\n" +
-				"	\n" +
-				"	(SELECT university.name FROM student_place_of_internship INNER JOIN user ON user.user_id = student_place_of_internship.user_id INNER JOIN university ON university.university_id = user.university_id WHERE student_place_of_internship.student_place_of_internship_id = std_internship_id) university_name,\n" +
-				"	\n" +
-				"	place_of_internship.name AS internship_name,\n" +
-				"	student_place_of_internship.time_reg\n" +
-				"	\n" +
-				"FROM student_place_of_internship\n" +
-				"INNER JOIN place_of_internship ON place_of_internship.place_of_internship_id = student_place_of_internship.place_of_internship_id\n" +
-				"WHERE student_place_of_internship.status = 1 AND place_of_internship.status = 1 AND place_of_internship.user_id = ? ORDER BY student_place_of_internship.time_reg DESC";
+		String sql = "SELECT	 \n" +
+				"student_place_of_internship.student_place_of_internship_id AS std_internship_id, \n" +
+				" \n" +
+				"(SELECT user.profile_image FROM student_place_of_internship INNER JOIN user ON user.user_id = student_place_of_internship.user_id WHERE student_place_of_internship.student_place_of_internship_id = std_internship_id) profile_image, \n" +
+				" \n" +
+				"(SELECT user.firstname FROM student_place_of_internship INNER JOIN user ON user.user_id = student_place_of_internship.user_id WHERE student_place_of_internship.student_place_of_internship_id = std_internship_id) firstname, \n" +
+				" \n" +
+				"(SELECT user.lastname FROM student_place_of_internship INNER JOIN user ON user.user_id = student_place_of_internship.user_id WHERE student_place_of_internship.student_place_of_internship_id = std_internship_id) lastname, \n" +
+				" \n" +
+				"(SELECT university.name FROM student_place_of_internship INNER JOIN user ON user.user_id = student_place_of_internship.user_id INNER JOIN university ON university.university_id = user.university_id WHERE student_place_of_internship.student_place_of_internship_id = std_internship_id) university_name, \n" +
+				" \n" +
+				"place_of_internship.name AS internship_name, \n" +
+				"student_place_of_internship.time_reg,\n" +
+				"CONCAT(term.year, '/', term.term_no) AS term\n" +
+				" \n" +
+				"FROM student_place_of_internship \n" +
+				"INNER JOIN place_of_internship ON place_of_internship.place_of_internship_id = student_place_of_internship.place_of_internship_id \n" +
+				"INNER JOIN term ON term.term_id = student_place_of_internship.term_id\n" +
+				"WHERE student_place_of_internship.status = 1 AND student_place_of_internship.send_status = 1 AND place_of_internship.status = 1 AND place_of_internship.user_id = ? ORDER BY student_place_of_internship.time_reg DESC";
 		String[] data = {user_id};
 		
 		return db.queryListWithPrepare(sql, data);
