@@ -168,7 +168,7 @@ public class StudentPlaceOfInternshipDAO implements DAO<StudentPlaceOfInternship
 		return null;
 	}
 	
-	public ArrayList<HashMap<String, Object>> queryStudentAndInternshipMatchingRole3(String internship_id) {
+	public ArrayList<HashMap<String, Object>> queryStudentAndInternshipMatchingRole3() {
 		
 		String sql = "SELECT     \n" +
 					"	user.user_id AS user_id,     \n" +
@@ -184,6 +184,7 @@ public class StudentPlaceOfInternshipDAO implements DAO<StudentPlaceOfInternship
 					"	user.phone,  \n" +
 					"	place_of_internship.name AS internship_name, \n" +
 					"	student_place_of_internship.student_place_of_internship_id AS student_place_of_internship_id, \n" +
+					"	CONCAT(term.year, '/', term.term_no) AS term,  \n" +
 					"		 \n" +
 					"CASE user.gender     \n" +
 					"	WHEN 1 THEN 'ชาย'     \n" +
@@ -196,19 +197,22 @@ public class StudentPlaceOfInternshipDAO implements DAO<StudentPlaceOfInternship
 					"INNER JOIN university ON university.university_id = user.university_id     \n" +
 					"INNER JOIN faculty ON faculty.faculty_id = user.faculty_id   \n" +
 					"INNER JOIN course ON course.course_id = user.course_id   \n" +
-					"WHERE user.user_type = 1 AND user.status = 1 AND student_place_of_internship.status = 1 AND student_place_of_internship.send_status = 2 AND student_place_of_internship.place_of_internship_id = ?";
+					"INNER JOIN term ON term.term_id = student_place_of_internship.term_id \n" +
+					"WHERE user.user_type = 1 AND user.status = 1 AND student_place_of_internship.status = 1 AND student_place_of_internship.send_status = 2";
 		
-		String[] data = {internship_id};
-		return db.queryListWithPrepare(sql, data);
+		return db.queryList(sql);
 	}
 	
 	public HashMap<String, Object> queryEmailByStudentInternshipId(String std_overseas_id) {
 		
-		String sql = "SELECT \n" +
-					"	user.email\n" +
-					"FROM student_place_of_internship\n" +
-					"INNER JOIN user ON user.user_id = student_place_of_internship.user_id\n" +
-					"WHERE student_place_of_internship.student_place_of_internship_id = ?";
+		String sql = "SELECT  \n" +
+				"	user.email,\n" +
+				"	place_of_internship.name AS internship_name\n" +
+				"	\n" +
+				"FROM student_place_of_internship \n" +
+				"INNER JOIN user ON user.user_id = student_place_of_internship.user_id \n" +
+				"INNER JOIN place_of_internship ON place_of_internship.place_of_internship_id = student_place_of_internship.place_of_internship_id\n" +
+				"WHERE student_place_of_internship.student_place_of_internship_id = ?";
 		
 		String[] data = {std_overseas_id};
 		

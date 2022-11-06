@@ -54,13 +54,9 @@ margin-top:45px;
 			<div class="table-container table-responsive">
 				<div class="abovetable">
 					<h4>ส่งข้อมูลการติดต่อให้นิสิต/นักศึกษา</h4>
+					<span style="color: red;">*หากต้องการดูข้อมูลรายเทอม ให้ใส่ข้อมูลช่อง Search ปีการศึกษา/เทอม (เช่น 2565/1)</span>
 				</div>
 
-				<div class="col col-sm-6 col-md-6 col-lg-3">
-					<select class="form-select" id="overseas_data">
-						<option>เลือกสถานที่ฝึกงาน</option>
-					</select>
-				</div>
 				<div class="table-overflow">
 				<table class="table text-center" id="userDataTable">
 					<thead class="table-dark text-white">
@@ -68,7 +64,8 @@ margin-top:45px;
 							<th></th>
 							<th>ชื่อ - นามสกุล</th>
 							<th>มหาวิทยาลัย</th>
-							<th>จังหวัด</th>
+							<th>สถานที่ฝึกงาน</th>
+							<th>เทอม</th>
 							<th></th>
 						</tr>
 					</thead>
@@ -81,7 +78,7 @@ margin-top:45px;
 
 				<button type="button" id="sendDataBtn" class='btn btn-primary'
 					style="float: right;" data-bs-toggle="modal"
-					data-bs-target="#internshipModal" disabled>ส่งข้อมูล</button>
+					data-bs-target="#internshipModal">ส่งข้อมูล</button>
 
 			</div>
 
@@ -124,6 +121,11 @@ margin-top:45px;
 								<div class="col col-sm-12 col-md-12 col-lg-3">
 									<label for="comment">สถานที่ฝึกงาน</label> <input
 										class="form-control" id="userOverseas" type="text" disabled></input>
+								</div>
+								
+								<div class="col col-sm-12 col-md-12 col-lg-2">
+									<label for="comment">ปีการศึกษา/เทอม</label> <input
+										class="form-control" id="userTerm" type="text" disabled></input>
 								</div>
 
 							</div>
@@ -273,27 +275,61 @@ $(function() {
 	
 	axios({
 		  method: "post",
-		  url: "findPlaceOfInternshipChoice",
+		  url: "internshipAndStudentMatchingData",
 		}).then(function (response) {
 			
 			$.each(response.data, function(i, data) {
-             	$('#overseas_data').append($('<option value="' + response.data[i].place_of_internship_id + '">' + response.data[i].name + '</option>'));
-         });			 
+				
+				var newRow = document.createElement("tr")
+				var newCell = document.createElement("td")
+				var newCell0 = document.createElement("td")
+			    var newCell1 = document.createElement("td")
+			    var newCell2 = document.createElement("td")
+			    var newCell3 = document.createElement("td")
+			    var newCell4 = document.createElement("td")
+			    
+			    var name = response.data[i].firstname +' '+response.data[i].lastname
+			    
+			    newCell.innerHTML = "<input id='checkBox' type='checkbox' value='"+response.data[i].student_place_of_internship_id+"'/>"
+			    newCell0.innerHTML = "<div class='d-flex '><img src="+'resources/images/profile/'+response.data[i].profile_image+" class='rounded-circle'/><div class='ms-3'><p class='fw-bold mb-1'>"+name+"</p></div></div>"
+			    
+			    newCell1.innerHTML = "<p class='fw-normal mb-1'>"+response.data[i].university_name+"</p>"
+			    newCell2.innerHTML = "<p class='fw-normal mb-1'>"+response.data[i].internship_name+"</p>"
+			    newCell3.innerHTML = "<p class='fw-normal mb-1'>"+response.data[i].term+"</p>"
+			    newCell4.innerHTML = "<button type='button' onClick='ShowUserData(\""+response.data[i].profile_image+"\",\""+ response.data[i].firstname+"\",\""+ response.data[i].lastname+"\",\""+ response.data[i].gender+"\",\""+ response.data[i].birthday+"\",\""+ response.data[i].university_name+"\",\""+ response.data[i].faculty_name+"\",\""+ response.data[i].course_name+"\",\""+response.data[i].user_id+"\",\""+response.data[i].province+"\",\""+response.data[i].internship_name+"\",\""+response.data[i].email+"\",\""+response.data[i].phone+"\",\""+response.data[i].term+"\")' class='btn btn-info' data-bs-toggle='modal' data-bs-target='#info'>ดูข้อมูลส่วนตัว</button>"
+			    
+			    newRow.append(newCell)
+			    newRow.append(newCell0)
+			    newRow.append(newCell1)
+			    newRow.append(newCell2)
+			    newRow.append(newCell3)
+			    newRow.append(newCell4)
+			    document.getElementById("userData").appendChild(newRow)
+				    
+          });
+			
+		  table = $('#userDataTable').dataTable()
+			/* $('#userDataTable').dataTable( {
+				  "aaSorting": [],
+				  "columnDefs": [
+				    { "width": "20%", "targets": 4 }
+				  ]
+				} ); */
 			
 		  })
 		  .catch(function (response) {
-			Swal.fire({
-			icon: 'error',
-			title: 'ไม่สามารถทำรายการได้ในขณะนี้',
-			showConfirmButton: false,
-			timer: 3000
-			})
+			  Swal.fire({
+				  icon: 'error',
+				  title: 'ไม่สามารถทำรายการได้ในขณะนี้',
+				  showConfirmButton: false,
+				  timer: 3000
+				})
 		  });
 	
 	});
 	
 				
-	function ShowUserData(profile_image, firstname, lastname, gender, birthday, university_name, faculty_name, course_name, user_id, province, internship_name, email, phone) {
+	function ShowUserData(profile_image, firstname, lastname, gender, birthday, university_name, faculty_name, course_name, user_id, province, internship_name, email, phone, term) {
 		
 		axios({
 			  method: "post",
@@ -355,75 +391,11 @@ $(function() {
 		document.getElementById('userOverseas').value = internship_name
 		document.getElementById('userEmail').value = email
 		document.getElementById('userPhone').value = phone
+		document.getElementById('userTerm').value = term
 		
 		
 	}
 	
-	$('#overseas_data').change(function() {
-		
-		var e = document.getElementById("overseas_data");
-		var internship = e.options[e.selectedIndex].value;
-		
-		if(internship != '') {
-			
-			axios({
-				  method: "post",
-				  url: "internshipAndStudentMatchingData",
-				  data: "internship="+internship,
-				}).then(function (response) {
-					
-					$("#userDataTable").DataTable().clear().draw();
-			        $("#userDataTable").dataTable().fnDestroy();
-			        
-					$.each(response.data, function(i, data) {
-						
-						var newRow = document.createElement("tr")
-						var newCell = document.createElement("td")
-						var newCell0 = document.createElement("td")
-					    var newCell1 = document.createElement("td")
-					    var newCell2 = document.createElement("td")
-					    var newCell3 = document.createElement("td")
-					    
-					    var name = response.data[i].firstname +' '+response.data[i].lastname
-					    
-					    newCell.innerHTML = "<input id='checkBox' type='checkbox' value='"+response.data[i].student_place_of_internship_id+"'/>"
-					    newCell0.innerHTML = "<div class='d-flex '><img src="+'resources/images/profile/'+response.data[i].profile_image+" class='rounded-circle'/><div class='ms-3'><p class='fw-bold mb-1'>"+name+"</p></div></div>"
-					    
-					    newCell1.innerHTML = "<p class='fw-normal mb-1'>"+response.data[i].university_name+"</p>"
-					    newCell2.innerHTML = "<p class='fw-normal mb-1'>"+response.data[i].province+"</p>"
-					    newCell3.innerHTML = "<button type='button' onClick='ShowUserData(\""+response.data[i].profile_image+"\",\""+ response.data[i].firstname+"\",\""+ response.data[i].lastname+"\",\""+ response.data[i].gender+"\",\""+ response.data[i].birthday+"\",\""+ response.data[i].university_name+"\",\""+ response.data[i].faculty_name+"\",\""+ response.data[i].course_name+"\",\""+response.data[i].user_id+"\",\""+response.data[i].province+"\",\""+response.data[i].internship_name+"\",\""+response.data[i].email+"\",\""+response.data[i].phone+"\")' class='btn btn-info' data-bs-toggle='modal' data-bs-target='#info'>ดูข้อมูลส่วนตัว</button>"
-					    
-					    newRow.append(newCell)
-					    newRow.append(newCell0)
-					    newRow.append(newCell1)
-					    newRow.append(newCell2)
-					    newRow.append(newCell3)
-					    document.getElementById("userData").appendChild(newRow)
-						    
-		            });
-					
-					table = $('#userDataTable').dataTable()
-					/* $('#userDataTable').dataTable( {
-						  "aaSorting": [],
-						  "columnDefs": [
-						    { "width": "20%", "targets": 4 }
-						  ]
-						} ); */
-					
-					document.getElementById('sendDataBtn').disabled = false
-						
-				  })
-				  .catch(function (response) {
-					  Swal.fire({
-						  icon: 'error',
-						  title: 'ไม่สามารถทำรายการได้ในขณะนี้',
-						  showConfirmButton: false,
-						  timer: 3000
-						})
-				  });
-		}
-		
-	});
 	
 	function getStdInternshipId() {
 		
@@ -433,7 +405,9 @@ $(function() {
 			if($(this).prop("checked")){
 			
 				std_overseas_id.push($(this).prop("value"))
+				
 			} 
+			
 		}));
 		
 		return std_overseas_id
@@ -480,17 +454,14 @@ function insertPlaceOfInternship() {
 			var ip = data.ip
 			var std_internship_id = getStdInternshipId()
 			
-			var e = document.getElementById("overseas_data");
-			var internship_name = e.options[e.selectedIndex].text;
-			
-			if(std_internship_id.length > 0 && contact != '' && ip != '' && internship_name != '' && date != '' && time != '') {
+			if(std_internship_id.length > 0 && contact != '' && ip != '' && date != '' && time != '') {
 				
 				date = getDateTH()
 				
 				axios({
 						  method: "post",
 						  url: "sendContactRole2",
-						  data: "std_internship_id="+JSON.stringify(std_internship_id)+"&ip="+ip+"&contact="+contact+"&internship_name="+internship_name+"&date="+date+"&time="+time,
+						  data: "std_internship_id="+JSON.stringify(std_internship_id)+"&ip="+ip+"&contact="+contact+"&date="+date+"&time="+time,
 						}).then(function (response) {
 							
 							if(response.data.alert == "1") {

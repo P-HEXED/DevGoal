@@ -341,9 +341,7 @@ public class StudentPlaceOfInternshipController {
 
 		if (sessionStatus == 0 && session.getAttribute("role").toString().equals("2")) {
 			
-			String internship_id = request.getParameter("internship");
-
-			ArrayList<HashMap<String, Object>> userData = new StudentPlaceOfInternshipDAO().queryStudentAndInternshipMatchingRole3(internship_id);
+			ArrayList<HashMap<String, Object>> userData = new StudentPlaceOfInternshipDAO().queryStudentAndInternshipMatchingRole3();
 
 			for (int i = 0; i < userData.size(); i++) {
 				jsonObject = new JSONObject();
@@ -360,6 +358,7 @@ public class StudentPlaceOfInternshipController {
 				jsonObject.put("phone", userData.get(i).get("phone"));
 				jsonObject.put("internship_name", userData.get(i).get("internship_name"));
 				jsonObject.put("student_place_of_internship_id", userData.get(i).get("student_place_of_internship_id"));
+				jsonObject.put("term", userData.get(i).get("term"));
 
 				jsonObject.put("province", userData.get(i).get("address").toString().split("\\s+")[5]);
 
@@ -389,14 +388,12 @@ public class StudentPlaceOfInternshipController {
 			String ip = request.getParameter("ip");
 			String contact = request.getParameter("contact");
 			String std_internship_id = request.getParameter("std_internship_id");
-			String internship_name = request.getParameter("internship_name");
 			String date = request.getParameter("date");
 			String time = request.getParameter("time");
-			String email = "";
 			String role3_email = "";
 			String role3_phone = "";
 		
-			if(std_internship_id != null && !std_internship_id.equals("") && time != null && !time.equals("") && date != null && !date.equals("") && internship_name != null && !internship_name.equals("") && ip != null && !ip.equals("") && contact != null && !contact.equals("")) {
+			if(std_internship_id != null && !std_internship_id.equals("") && time != null && !time.equals("") && date != null && !date.equals("") && ip != null && !ip.equals("") && contact != null && !contact.equals("")) {
 				
 				HashMap<String, Object> role3Data = new UserDAO().findEmailAndPhoneByUserId(session.getAttribute("id").toString());
 				role3_email = role3Data.get("email").toString();
@@ -408,12 +405,19 @@ public class StudentPlaceOfInternshipController {
 				
 				String[] std_internship_id_data = std_internship_id.split(",");
 				
+				HashMap<String, Object> emailRole1AndInternshipName = new HashMap<String, Object>();
+				
 				for(int i = 0; i < std_internship_id_data.length; i++) {
 					
-					email = new StudentPlaceOfInternshipDAO().queryEmailByStudentInternshipId(std_internship_id_data[i]).get("email").toString();
-					etc.sendEmail(session.getAttribute("id").toString(), email, "ที่อยู่สำหรับการติดต่อ", "ที่อยู่สำหรับการติดต่อเพื่อนัดประชุมก่อนฝึกงาน : "+contact+"\nภายใน : "+date+"\nเวลา : "+time+" น. เป็นต้นไป\n\nจากบริษัท : "+internship_name+"\nอีเมลอาจารย์ : "+role3_email+"\nเบอร์โทร : "+role3_phone);
+					emailRole1AndInternshipName = new StudentPlaceOfInternshipDAO().queryEmailByStudentInternshipId(std_internship_id_data[i]);
 					
-					new StudentPlaceOfInternshipDAO().updateSendStatus(std_internship_id_data[i]);
+					if(emailRole1AndInternshipName != null) {
+						
+						etc.sendEmail(session.getAttribute("id").toString(), emailRole1AndInternshipName.get("email").toString(), "ที่อยู่สำหรับการติดต่อ", "ที่อยู่สำหรับการติดต่อเพื่อนัดประชุมก่อนฝึกงาน : "+contact+"\nภายใน : "+date+"\nเวลา : "+time+" น. เป็นต้นไป\n\nจากบริษัท : "+emailRole1AndInternshipName.get("internship_name").toString()+"\nอีเมลอาจารย์ : "+role3_email+"\nเบอร์โทร : "+role3_phone);
+						
+						new StudentPlaceOfInternshipDAO().updateSendStatus(std_internship_id_data[i]);
+						
+					}
 					
 				}
 					
