@@ -79,9 +79,9 @@ p {
 			<button class="btn" id="menu-btn">
 				<i class="fa-solid fa-list"></i>
 			</button>
-			<h4>สถิติการฝึกงาน</h4>
+			
 			<div class="row">
-
+				<h4>สถิติการฝึกงาน</h4>
 				<div class="col-lg-5 col-sm-12 col-md-12">
 					<div class="card card-date">
 						<div class="row">
