@@ -661,11 +661,7 @@ public class StudentPlaceOfInternshipController {
 		
 		if(sessionStatus == 0 && session.getAttribute("role").toString().equals("2")) {
 			
-			String internship_id = request.getParameter("internship_id");
-		
-			if(internship_id != null && !internship_id.equals("")) {
-				
-				ArrayList<HashMap<String, Object>> userData = new StudentPlaceOfInternshipDAO().queryStudentDataInternshipCompleteRole2(internship_id, session.getAttribute("id").toString());
+				ArrayList<HashMap<String, Object>> userData = new StudentPlaceOfInternshipDAO().queryStudentDataInternshipCompleteRole2(session.getAttribute("id").toString());
 				
 				for (int i = 0; i < userData.size(); i++) {
 					jsonObject = new JSONObject();
@@ -678,13 +674,11 @@ public class StudentPlaceOfInternshipController {
 					jsonObject.put("internship_name", userData.get(i).get("internship_name"));
 					jsonObject.put("time_reg", userData.get(i).get("time_reg"));
 					jsonObject.put("student_place_of_internship_id", userData.get(i).get("student_place_of_internship_id"));
+					jsonObject.put("term_no", userData.get(i).get("term_no"));
 	
 					jsonArray.put(jsonObject);
 				}
 				
-				
-			}
-			
 		}
 
 		etc.responseJSONArray(jsonArray, response);
@@ -708,11 +702,7 @@ public class StudentPlaceOfInternshipController {
 		
 		if(sessionStatus == 0 && session.getAttribute("role").toString().equals("2")) {
 			
-			String internship_id = request.getParameter("internship_id");
-		
-			if(internship_id != null && !internship_id.equals("")) {
-				
-				ArrayList<HashMap<String, Object>> userData = new StudentPlaceOfInternshipDAO().queryStudentDataInternshipCompleteForReport(internship_id, session.getAttribute("id").toString());
+				ArrayList<HashMap<String, Object>> userData = new StudentPlaceOfInternshipDAO().queryStudentDataInternshipCompleteForReport(session.getAttribute("id").toString());
 				
 				for (int i = 0; i < userData.size(); i++) {
 					jsonObject = new JSONObject();
@@ -726,12 +716,12 @@ public class StudentPlaceOfInternshipController {
 					jsonObject.put("time_reg", userData.get(i).get("time_reg"));
 					jsonObject.put("student_place_of_internship_id", userData.get(i).get("student_place_of_internship_id"));
 					jsonObject.put("assessment_internship_id", userData.get(i).get("assessment_internship_id"));
+					jsonObject.put("term_no", userData.get(i).get("term_no"));
 	
 					jsonArray.put(jsonObject);
 				}
 				
 				
-			}
 			
 		}
 

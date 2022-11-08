@@ -922,28 +922,34 @@ public class UserDAO implements DAO<UserModel>{
 	
 	public HashMap<String, Object> queryPlacesDataRole1(String user_id) {
 		
-		String sql = "SELECT \n" +
+		String sql = "SELECT  \n" +
+				"					 \n" +
+				"	(SELECT  \n" +
+				"	COUNT(student_place_of_internship_id)  \n" +
+				"	 \n" +
+				"FROM student_place_of_internship  \n" +
+				"WHERE status = 2 AND student_place_of_internship.condition = 2 AND send_status = 2 AND user_id = ?) AS internship_request_student, \n" +
 				"	\n" +
-				"	(SELECT \n" +
-				"	COUNT(student_place_of_internship_id) \n" +
 				"	\n" +
+				"	(SELECT  \n" +
+				"	COUNT(student_overseas_work_place_id)  \n" +
+				"	 \n" +
+				"FROM student_overseas_work_place  \n" +
+				"WHERE status = 2 AND student_overseas_work_place.condition = 2 AND send_status = 2 AND user_id = ?) AS overseas_request_student, \n" +
+				"	\n" +
+				"	\n" +
+				"	(SELECT  \n" +
+				"	place_of_internship.name AS internship_name \n" +
 				"FROM student_place_of_internship \n" +
-				"WHERE status = 2 AND student_place_of_internship.condition = 2 AND send_status = 2 AND user_id = ?) AS internship_request_student,\n" +
-				"	(SELECT \n" +
-				"	COUNT(student_overseas_work_place_id) \n" +
+				"INNER JOIN place_of_internship ON place_of_internship.place_of_internship_id = student_place_of_internship.place_of_internship_id \n" +
+				"WHERE student_place_of_internship.status = 1 AND student_place_of_internship.send_status = 1 AND student_place_of_internship.user_id = ? ORDER BY student_place_of_internship.student_place_of_internship_id DESC LIMIT 1) AS internship_now, \n" +
 				"	\n" +
+				"	\n" +
+				"	(SELECT  \n" +
+				"	overseas_work_place.name AS overseas_name \n" +
 				"FROM student_overseas_work_place \n" +
-				"WHERE status = 2 AND student_overseas_work_place.condition = 2 AND send_status = 2 AND user_id = ?) AS overseas_request_student,\n" +
-				"	(SELECT \n" +
-				"	place_of_internship.name AS internship_name\n" +
-				"FROM student_place_of_internship\n" +
-				"INNER JOIN place_of_internship ON place_of_internship.place_of_internship_id = student_place_of_internship.place_of_internship_id\n" +
-				"WHERE student_place_of_internship.status = 1 AND student_place_of_internship.send_status = 1 AND student_place_of_internship.user_id = ?) AS internship_now,\n" +
-				"	(SELECT \n" +
-				"	overseas_work_place.name AS overseas_name\n" +
-				"FROM student_overseas_work_place\n" +
-				"INNER JOIN overseas_work_place ON overseas_work_place.overseas_work_place_id = student_overseas_work_place.overseas_work_place_id\n" +
-				"WHERE student_overseas_work_place.status = 1 AND student_overseas_work_place.send_status = 1 AND student_overseas_work_place.user_id = ?) AS overseas_now";
+				"INNER JOIN overseas_work_place ON overseas_work_place.overseas_work_place_id = student_overseas_work_place.overseas_work_place_id \n" +
+				"WHERE student_overseas_work_place.status = 1 AND student_overseas_work_place.send_status = 1 AND student_overseas_work_place.user_id = ? ORDER BY overseas_work_place.overseas_work_place_id DESC LIMIT 1) AS overseas_now";
 		
 		String[] data = {user_id, user_id, user_id, user_id};
 		

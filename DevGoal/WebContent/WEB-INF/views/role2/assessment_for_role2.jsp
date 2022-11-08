@@ -69,12 +69,8 @@
 			<div class="table-container table-responsive">
 				<div class="row abovetable ">
 					<h4>ประเมินการฝึกงานนิสิต/นักศึกษา</h4>
+					<span style="color: red;">*หากต้องการดูข้อมูลรายเทอม ให้ใส่ข้อมูลช่อง Search ปีการศึกษา/เทอม (เช่น 2565/1)</span>
 				</div>
-				
-				 <div class="col col-sm-6 col-md-6 col-lg-3">
-                	<select class="form-select" id="internshipSelect">
-					</select>
-                </div>
 				
 				<div class="table-overflow">
 				<table class="table text-center" id="userDataTable">
@@ -83,6 +79,7 @@
 							<th>ชื่อ - นามสกุล</th>
 							<th>มหาวิทยาลัย</th>
 							<th>สถานที่ฝึกงาน</th>
+							<th>เทอม</th>
 							<th>วันที่ดำเนินการฝึกงาน</th>
 							<th></th>
 						</tr>
@@ -207,90 +204,53 @@ $(function() {
 	
 	axios({
 		  method: "post",
-		  url: "findPlaceOfInternshipChoice",
+		  url: "getStudentInternshipCompleteRole2",
 		}).then(function (response) {
 			
-			$('#internshipSelect').append('<option value="0">กรุณาเลือกสถานที่ฝึกงาน</option>')
-			
 			$.each(response.data, function(i, data) {
-               $('#internshipSelect').append($('<option value="' + response.data[i].place_of_internship_id + '">' + response.data[i].name + '</option>'));
-           });
-			
+
+					var newRow = document.createElement("tr")
+					var newCell0 = document.createElement("td")
+				    var newCell1 = document.createElement("td")
+				    var newCell2 = document.createElement("td")
+				    var newCell3 = document.createElement("td")
+				    var newCell4 = document.createElement("td")
+				    var newCell5 = document.createElement("td")
+				    
+				    var name = response.data[i].firstname +' '+response.data[i].lastname
+				    
+				    newCell0.innerHTML = "<div class='d-flex '><img src="+'resources/images/profile/'+response.data[i].profile_image+" class='rounded-circle'/><div class='ms-3'><p class='fw-bold mb-1'>"+name+"</p></div></div>"
+				    newCell1.innerHTML = "<p class='fw-normal mb-1'>"+response.data[i].university_name+"</p>"
+				    newCell2.innerHTML = "<p>"+response.data[i].internship_name+"</p>"
+				    newCell3.innerHTML = "<p>"+response.data[i].term_no+"</p>"
+				    newCell4.innerHTML = "<p>"+response.data[i].time_reg+"</p>"
+				    newCell5.innerHTML = "<button onClick='showModal(\""+response.data[i].profile_image+"\",\""+response.data[i].firstname+"\",\""+response.data[i].lastname+"\",\""+response.data[i].university_name+"\",\""+response.data[i].faculty_name+"\",\""+response.data[i].course_name+"\",\""+response.data[i].internship_name+"\",\""+response.data[i].time_reg+"\",\""+response.data[i].student_place_of_internship_id+"\")' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#sendnotify'>ทำแบบประเมิน</button>"
+				    
+				    
+				    newRow.append(newCell0)
+				    newRow.append(newCell1)
+				    newRow.append(newCell2)
+				    newRow.append(newCell3)
+				    newRow.append(newCell4)
+				    newRow.append(newCell5)
+				    document.getElementById("userData").appendChild(newRow)
+				    
+          });
+			$('#userDataTable').dataTable();
 		  })
 		  .catch(function (response) {
-			Swal.fire({
-			icon: 'error',
-			title: 'ไม่สามารถทำรายการได้ในขณะนี้',
-			showConfirmButton: false,
-			timer: 3000
-		})
+			  Swal.fire({
+				  icon: 'error',
+				  title: 'ไม่สามารถทำรายการได้ในขณะนี้',
+				  showConfirmButton: false,
+				  timer: 3000
+				})
 		  });
 	
 		    
 	});
 	
 	
-	$('#internshipSelect').change(function() {
-		
-		var e = document.getElementById("internshipSelect");
-		var internship_id = e.options[e.selectedIndex].value;
-		
-		if(internship_id != '') {
-			
-			axios({
-				  method: "post",
-				  url: "getStudentInternshipCompleteRole2",
-				  data: "internship_id="+internship_id,
-				}).then(function (response) {
-					
-					$("#userDataTable").DataTable().clear().draw();
-			        $("#userDataTable").dataTable().fnDestroy();
-					
-					$.each(response.data, function(i, data) {
-
-							var newRow = document.createElement("tr")
-							var newCell0 = document.createElement("td")
-						    var newCell1 = document.createElement("td")
-						    var newCell2 = document.createElement("td")
-						    var newCell3 = document.createElement("td")
-						    var newCell4 = document.createElement("td")
-						    
-						    var name = response.data[i].firstname +' '+response.data[i].lastname
-						    
-						    newCell0.innerHTML = "<div class='d-flex '><img src="+'resources/images/profile/'+response.data[i].profile_image+" class='rounded-circle'/><div class='ms-3'><p class='fw-bold mb-1'>"+name+"</p></div></div>"
-						    newCell1.innerHTML = "<p class='fw-normal mb-1'>"+response.data[i].university_name+"</p>"
-						    newCell2.innerHTML = "<p>"+response.data[i].internship_name+"</p>"
-						    newCell3.innerHTML = "<p>"+response.data[i].time_reg+"</p>"
-						    newCell4.innerHTML = "<button onClick='showModal(\""+response.data[i].profile_image+"\",\""+response.data[i].firstname+"\",\""+response.data[i].lastname+"\",\""+response.data[i].university_name+"\",\""+response.data[i].faculty_name+"\",\""+response.data[i].course_name+"\",\""+response.data[i].internship_name+"\",\""+response.data[i].time_reg+"\",\""+response.data[i].student_place_of_internship_id+"\")' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#sendnotify'>ทำแบบประเมิน</button>"
-						    
-						    
-						    newRow.append(newCell0)
-						    newRow.append(newCell1)
-						    newRow.append(newCell2)
-						    newRow.append(newCell3)
-						    newRow.append(newCell4)
-						    document.getElementById("userData").appendChild(newRow)
-						    
-		            });
-					$('#userDataTable').dataTable();
-					/* $('#userDataTable').dataTable( {
-						  "columnDefs": [
-						    { "width": "20%", "targets": 4 }
-						  ]
-						} ); */
-				  })
-				  .catch(function (response) {
-					  Swal.fire({
-						  icon: 'error',
-						  title: 'ไม่สามารถทำรายการได้ในขณะนี้',
-						  showConfirmButton: false,
-						  timer: 3000
-						})
-				  });
-		}
-	});
-	
-				
 	function showModal(profile_image, firstname, lastname, university_name, faculty_name, course_name, internship_name, time_reg, student_place_of_internship_id) {
 		
 		
@@ -310,7 +270,7 @@ $(function() {
 		             		
 		             	} else if(response.data[i].input_type == 'ช่องเพิ่มตัวเลข') {
 		             		
-		             		form += '<div class="row"><div class="col-sm-2 col-md-3 col-lg-2"><p>'+response.data[i].detail+' (คะแนนเต็ม '+ response.data[i].score+')'+'</p></div><div class="col-sm-3 col-md-3 col-lg-3"><div class="form-floating "><input type="number" min="1" class="form-control" id="criterionScore'+i+'" placeholder="คะแนน" > <label for="name">คะแนน</label></div></div></div><input type="hidden" id="criterionId'+i+'" value="'+response.data[i].criterion_id+'">'
+		             		form += '<div class="row"><div class="col-sm-2 col-md-3 col-lg-2"><p>'+response.data[i].detail+' (คะแนนเต็ม '+ response.data[i].score+')'+'</p></div><div class="col-sm-3 col-md-3 col-lg-3"><div class="form-floating "><input type="hidden" value="'+response.data[i].score+'" id="criterionFullScore'+i+'"><input type="number" min="1" class="form-control" id="criterionScore'+i+'" placeholder="คะแนน" > <label for="name">คะแนน</label></div></div></div><input type="hidden" id="criterionId'+i+'" value="'+response.data[i].criterion_id+'">'
 		             		
 		             	}
 		             	
@@ -361,11 +321,13 @@ $(function() {
 		
 		const criterionId = "criterionId"
 		const criterionScore = "criterionScore"
+		const criterionFullScore = "criterionFullScore"
 		var id = ''
 		
 		var criterion_data = []
 		var criterion_id = []
 		var criterion_score = []
+		var criterion_full_score = []
 
 		for(var key in inputs) {
 		   id = inputs[key].id
@@ -397,6 +359,9 @@ $(function() {
 				   
 				  
 				   
+			   } else if(id.includes(criterionFullScore)) {
+				   
+				   criterion_full_score.push(document.getElementById(id).value)
 			   }
 			   
 		   }
@@ -406,7 +371,23 @@ $(function() {
 		
 		for(var i = 0; i < criterion_id.length; i++) {
 			
-			criterion_data.push([criterion_id[i], criterion_score[i]])
+			if(parseInt(criterion_score[i]) > 0 && parseInt(criterion_score[i]) <= parseInt(criterion_full_score[i])) {
+				
+				criterion_data.push([criterion_id[i], criterion_score[i]])
+			} else {
+				
+				
+				Swal.fire({
+					  icon: 'error',
+					  title: 'คะแนนน้อยกว่าหรือมากกว่าเกณฑ์ที่กำหนด',
+					  showConfirmButton: false,
+					  timer: 3000
+					})
+					$(':button').prop('disabled', false);
+		 		document.getElementById('spinner').style.display = 'none';
+		 		return(false)			
+			}
+			
 		}
 		
 		var result_internship_id = document.getElementById('result_internship_id').value

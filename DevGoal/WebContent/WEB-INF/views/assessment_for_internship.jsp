@@ -255,7 +255,7 @@ $(function() {
 	             		
 	             	} else if(response.data[i].input_type == 'ช่องเพิ่มตัวเลข') {
 	             		
-	             		form += '<div class="row"><div class="col-sm-2 col-md-3 col-lg-2"><p>'+response.data[i].detail+' (คะแนนเต็ม '+ response.data[i].score+')'+'</p></div><div class="col-sm-3 col-md-3 col-lg-3"><div class="form-floating "><input type="number" min="1" class="form-control" id="criterionScore'+i+'" placeholder="คะแนน" > <label for="name">คะแนน</label></div></div></div><input type="hidden" id="criterionId'+i+'" value="'+response.data[i].criterion_id+'">'
+	             		form += '<div class="row"><div class="col-sm-2 col-md-3 col-lg-2"><p>'+response.data[i].detail+' (คะแนนเต็ม '+ response.data[i].score+')'+'</p></div><div class="col-sm-3 col-md-3 col-lg-3"><div class="form-floating "><input type="hidden" value="'+response.data[i].score+'" id="criterionFullScore'+i+'"><input type="number" min="1" class="form-control" id="criterionScore'+i+'" placeholder="คะแนน" > <label for="name">คะแนน</label></div></div></div><input type="hidden" id="criterionId'+i+'" value="'+response.data[i].criterion_id+'">'
 	             		
 	             	}
 	             	
@@ -303,11 +303,13 @@ $(function() {
 		
 		const criterionId = "criterionId"
 		const criterionScore = "criterionScore"
+		const criterionFullScore = "criterionFullScore"
 		var id = ''
 		
 		var criterion_data = []
 		var criterion_id = []
 		var criterion_score = []
+		var criterion_full_score = []
 
 		for(var key in inputs) {
 		   id = inputs[key].id
@@ -332,13 +334,16 @@ $(function() {
 							  showConfirmButton: false,
 							  timer: 3000
 							})
-						$(':button').prop('disabled', true);
+						$(':button').prop('disabled', false);
 					   document.getElementById('spinner').style.display = 'none';
 						return(false)
 				   }
 				   
 				  
 				   
+			   } else if(id.includes(criterionFullScore)) {
+				   
+				   criterion_full_score.push(document.getElementById(id).value)
 			   }
 			   
 		   }
@@ -348,7 +353,23 @@ $(function() {
 		
 		for(var i = 0; i < criterion_id.length; i++) {
 			
-			criterion_data.push([criterion_id[i], criterion_score[i]])
+			if(parseInt(criterion_score[i]) > 0 && parseInt(criterion_score[i]) <= parseInt(criterion_full_score[i])) {
+				
+				criterion_data.push([criterion_id[i], criterion_score[i]])
+			} else {
+				
+				
+				Swal.fire({
+					  icon: 'error',
+					  title: 'คะแนนน้อยกว่าหรือมากกว่าเกณฑ์ที่กำหนด',
+					  showConfirmButton: false,
+					  timer: 3000
+					})
+					$(':button').prop('disabled', false);
+		 		document.getElementById('spinner').style.display = 'none';
+		 		return(false)			
+			}
+			
 		}
 		
 		const queryString = window.location.search;
@@ -413,7 +434,7 @@ $(function() {
 								  showConfirmButton: false,
 								  timer: 3000
 								})
-								$(':button').prop('disabled', true);
+								$(':button').prop('disabled', false);
 					 		document.getElementById('spinner').style.display = 'none';
 				  });
 			

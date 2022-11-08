@@ -66,12 +66,8 @@
 			<div class="table-container table-responsive">
 				<div class="row abovetable ">
 					<h4>ผลการประเมินการฝึกงานของนิสิต/นักศึกษา</h4>
+					<span style="color: red;">*หากต้องการดูข้อมูลรายเทอม ให้ใส่ข้อมูลช่อง Search ปีการศึกษา/เทอม (เช่น 2565/1)</span>
 				</div>
-				
-				 <div class="col col-sm-6 col-md-6 col-lg-3">
-                	<select class="form-select" id="internshipSelect">
-					</select>
-                </div>
 				
 				<div class="table-overflow">
 				<table class="table text-center" id="userDataTable">
@@ -80,6 +76,7 @@
 							<th>ชื่อ - นามสกุล</th>
 							<th>มหาวิทยาลัย</th>
 							<th>สถานที่ฝึกงาน</th>
+							<th>เทอม</th>
 							<th>วันที่ดำเนินการฝึกงาน</th>
 							<th></th>
 						</tr>
@@ -185,91 +182,56 @@
 <script type="text/javascript">
 $(function() {
 	
-	
 	axios({
 		  method: "post",
-		  url: "findPlaceOfInternshipChoice",
+		  url: "getStudentInternshipCompleteForReport",
 		}).then(function (response) {
 			
-			$('#internshipSelect').append('<option value="0">กรุณาเลือกสถานที่ฝึกงาน</option>')
 			
 			$.each(response.data, function(i, data) {
-               $('#internshipSelect').append($('<option value="' + response.data[i].place_of_internship_id + '">' + response.data[i].name + '</option>'));
-           });
-			
+
+					var newRow = document.createElement("tr")
+					var newCell0 = document.createElement("td")
+				    var newCell1 = document.createElement("td")
+				    var newCell2 = document.createElement("td")
+				    var newCell3 = document.createElement("td")
+				    var newCell4 = document.createElement("td")
+				    var newCell5 = document.createElement("td")
+				    
+				    var name = response.data[i].firstname +' '+response.data[i].lastname
+				    
+				    newCell0.innerHTML = "<div class='d-flex '><img src="+'resources/images/profile/'+response.data[i].profile_image+" class='rounded-circle'/><div class='ms-3'><p class='fw-bold mb-1'>"+name+"</p></div></div>"
+				    newCell1.innerHTML = "<p class='fw-normal mb-1'>"+response.data[i].university_name+"</p>"
+				    newCell2.innerHTML = "<p>"+response.data[i].internship_name+"</p>"
+				    newCell3.innerHTML = "<p>"+response.data[i].term_no+"</p>"
+				    newCell4.innerHTML = "<p>"+response.data[i].time_reg+"</p>"
+				    newCell5.innerHTML = "<button onClick='showModal(\""+response.data[i].profile_image+"\",\""+response.data[i].firstname+"\",\""+response.data[i].lastname+"\",\""+response.data[i].university_name+"\",\""+response.data[i].faculty_name+"\",\""+response.data[i].course_name+"\",\""+response.data[i].internship_name+"\",\""+response.data[i].time_reg+"\",\""+response.data[i].student_place_of_internship_id+"\",\""+response.data[i].assessment_internship_id+"\")' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#sendnotify'>ดูคะแนนการประเมิน</button>"
+				    
+				    
+				    newRow.append(newCell0)
+				    newRow.append(newCell1)
+				    newRow.append(newCell2)
+				    newRow.append(newCell3)
+				    newRow.append(newCell4)
+				    newRow.append(newCell5)
+				    document.getElementById("userData").appendChild(newRow)
+				    
+          });
+			$('#userDataTable').dataTable();
 		  })
 		  .catch(function (response) {
-			Swal.fire({
-			icon: 'error',
-			title: 'ไม่สามารถทำรายการได้ในขณะนี้',
-			showConfirmButton: false,
-			timer: 3000
-		})
+			  Swal.fire({
+				  icon: 'error',
+				  title: 'ไม่สามารถทำรายการได้ในขณะนี้',
+				  showConfirmButton: false,
+				  timer: 3000
+				})
 		  });
 	
 		    
 	});
 	
 	
-	$('#internshipSelect').change(function() {
-		
-		var e = document.getElementById("internshipSelect");
-		var internship_id = e.options[e.selectedIndex].value;
-		
-		if(internship_id != '') {
-			
-			axios({
-				  method: "post",
-				  url: "getStudentInternshipCompleteForReport",
-				  data: "internship_id="+internship_id,
-				}).then(function (response) {
-					
-					$("#userDataTable").DataTable().clear().draw();
-			        $("#userDataTable").dataTable().fnDestroy();
-					
-					$.each(response.data, function(i, data) {
-
-							var newRow = document.createElement("tr")
-							var newCell0 = document.createElement("td")
-						    var newCell1 = document.createElement("td")
-						    var newCell2 = document.createElement("td")
-						    var newCell3 = document.createElement("td")
-						    var newCell4 = document.createElement("td")
-						    
-						    var name = response.data[i].firstname +' '+response.data[i].lastname
-						    
-						    newCell0.innerHTML = "<div class='d-flex '><img src="+'resources/images/profile/'+response.data[i].profile_image+" class='rounded-circle'/><div class='ms-3'><p class='fw-bold mb-1'>"+name+"</p></div></div>"
-						    newCell1.innerHTML = "<p class='fw-normal mb-1'>"+response.data[i].university_name+"</p>"
-						    newCell2.innerHTML = "<p>"+response.data[i].internship_name+"</p>"
-						    newCell3.innerHTML = "<p>"+response.data[i].time_reg+"</p>"
-						    newCell4.innerHTML = "<button onClick='showModal(\""+response.data[i].profile_image+"\",\""+response.data[i].firstname+"\",\""+response.data[i].lastname+"\",\""+response.data[i].university_name+"\",\""+response.data[i].faculty_name+"\",\""+response.data[i].course_name+"\",\""+response.data[i].internship_name+"\",\""+response.data[i].time_reg+"\",\""+response.data[i].student_place_of_internship_id+"\",\""+response.data[i].assessment_internship_id+"\")' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#sendnotify'>ดูคะแนนการประเมิน</button>"
-						    
-						    
-						    newRow.append(newCell0)
-						    newRow.append(newCell1)
-						    newRow.append(newCell2)
-						    newRow.append(newCell3)
-						    newRow.append(newCell4)
-						    document.getElementById("userData").appendChild(newRow)
-						    
-		            });
-					$('#userDataTable').dataTable();
-					/* $('#userDataTable').dataTable( {
-						  "columnDefs": [
-						    { "width": "20%", "targets": 4 }
-						  ]
-						} ); */
-				  })
-				  .catch(function (response) {
-					  Swal.fire({
-						  icon: 'error',
-						  title: 'ไม่สามารถทำรายการได้ในขณะนี้',
-						  showConfirmButton: false,
-						  timer: 3000
-						})
-				  });
-		}
-	});
 	
 				
 	function showModal(profile_image, firstname, lastname, university_name, faculty_name, course_name, internship_name, time_reg, student_place_of_internship_id, assessment_internship_id) {

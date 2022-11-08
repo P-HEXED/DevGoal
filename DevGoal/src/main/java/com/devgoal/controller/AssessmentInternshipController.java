@@ -127,12 +127,12 @@ public class AssessmentInternshipController {
 		
 		if(sessionStatus == 0 && session.getAttribute("role").toString().equals("2")) {
 			
-			HashMap<String, Object> role1InternshipComplete = new AssessmentInternshipDetDAO().queryStudentInternshipComplete(session.getAttribute("id").toString());
+			ArrayList<HashMap<String, Object>> role1InternshipComplete = new AssessmentInternshipDetDAO().queryStudentInternshipComplete(session.getAttribute("id").toString());
 			HashMap<String, Object> role1Internshiping = new AssessmentInternshipDetDAO().queryStudentInternshiping(session.getAttribute("id").toString());
 			
 			
 			jsonObject = new JSONObject();
-			jsonObject.put("role1_complete", role1InternshipComplete.get("role1_complete"));
+			jsonObject.put("role1_complete", role1InternshipComplete.size());
 			jsonObject.put("role1_internshiping", role1Internshiping.get("role1_internshiping"));
 			
 		}
@@ -206,7 +206,7 @@ public class AssessmentInternshipController {
 				
 				if(term_id != null) {
 
-					ArrayList<HashMap<String, Object>> role1InternshipData = new StudentPlaceOfInternshipDAO().queryStudentDataInternshipForAssessment(term_id.get("term_id").toString());
+					ArrayList<HashMap<String, Object>> role1InternshipData = new StudentPlaceOfInternshipDAO().queryStudentDataInternshipForAssessment(term_id.get("term_id").toString(), session.getAttribute("id").toString());
 					
 					for(int i = 0; i < role1InternshipData.size(); i++) {
 						jsonObject = new JSONObject();
@@ -248,7 +248,7 @@ public class AssessmentInternshipController {
 		
 		if(sessionStatus == 0 && session.getAttribute("role").toString().equals("2")) {
 			
-			ArrayList<HashMap<String, Object>> role1InternshipData = new StudentPlaceOfInternshipDAO().queryStudentDataInternshipForAssessmentNoFilter();
+			ArrayList<HashMap<String, Object>> role1InternshipData = new StudentPlaceOfInternshipDAO().queryStudentDataInternshipForAssessmentNoFilter(session.getAttribute("id").toString());
 			
 			for(int i = 0; i < role1InternshipData.size(); i++) {
 				jsonObject = new JSONObject();
@@ -298,10 +298,10 @@ public class AssessmentInternshipController {
 				
 				if(term_id != null) {
 					
-					HashMap<String, Object> role1InternshipComplete = new AssessmentInternshipDetDAO().queryStudentInternshipCompleteFilter(session.getAttribute("id").toString(), term_id.get("term_id").toString());
+					ArrayList<HashMap<String, Object>> role1InternshipComplete = new AssessmentInternshipDetDAO().queryStudentInternshipCompleteFilter(session.getAttribute("id").toString(), term_id.get("term_id").toString());
 					HashMap<String, Object> role1Internshiping = new AssessmentInternshipDetDAO().queryStudentInternshipingFilter(session.getAttribute("id").toString(), term_id.get("term_id").toString());
 					
-					jsonObject.put("role1_complete", role1InternshipComplete.get("role1_complete"));
+					jsonObject.put("role1_complete", role1InternshipComplete.size());
 					jsonObject.put("role1_internshiping", role1Internshiping.get("role1_internshiping"));
 				}
 				
