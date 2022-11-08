@@ -46,33 +46,40 @@ public class ResultInternshipController {
 			String criterionData = request.getParameter("criterion_data");
 			String result_internship_name = request.getParameter("result_internship_name");
 			String ip = request.getParameter("ip");
+			String form_type = request.getParameter("form_type");
 
-			if (result_internship_name != null && !result_internship_name.equals("") && role2_id != null && !role2_id.equals("") && criterionData != null && !criterionData.equals("") && ip != null && !ip.equals("")) {
-
-				int lastResultInternshipId = new ResultInternshipDAO().insertResultInternship(role2_id, result_internship_name);
+			if (form_type != null && !form_type.equals("") && !form_type.equals("0") && result_internship_name != null && !result_internship_name.equals("") && role2_id != null && !role2_id.equals("") && criterionData != null && !criterionData.equals("") && ip != null && !ip.equals("")) {
 				
-				if(lastResultInternshipId > 0) {
+				if(form_type.equals("1") || form_type.equals("2")) {
 					
-					JSONArray jsonArray = new JSONArray(criterionData);
+					int lastResultInternshipId = new ResultInternshipDAO().insertResultInternship(role2_id, result_internship_name, form_type);
 					
-					int insertStatus = 0;
-					
-					for (int i = 0; i < jsonArray.length(); i++) {
+					if(lastResultInternshipId > 0) {
 						
-						insertStatus = new ResultInternshipDetDAO().insertResultInternshipDet(Integer.toString(lastResultInternshipId), jsonArray.getJSONArray(i).get(0).toString(), jsonArray.getJSONArray(i).get(1).toString());
+						JSONArray jsonArray = new JSONArray(criterionData);
 						
-					}
-					
-					if(insertStatus == 1) {
+						int insertStatus = 0;
 						
-						status = "บันทึกแบบฟอร์มการประเมินสำเร็จ";
-						alert = "1";
+						for (int i = 0; i < jsonArray.length(); i++) {
+							
+							insertStatus = new ResultInternshipDetDAO().insertResultInternshipDet(Integer.toString(lastResultInternshipId), jsonArray.getJSONArray(i).get(0).toString(), jsonArray.getJSONArray(i).get(1).toString());
+							
+						}
 						
-						new EventHistoryDAO().insertEventHistory(role2_id, "บันทึกแบบฟอร์มการประเมินรหัส "+lastResultInternshipId, ip);
+						if(insertStatus == 1) {
+							
+							status = "บันทึกแบบฟอร์มการประเมินสำเร็จ";
+							alert = "1";
+							
+							new EventHistoryDAO().insertEventHistory(role2_id, "บันทึกแบบฟอร์มการประเมินรหัส "+lastResultInternshipId, ip);
+							
+						}
 						
 					}
 					
 				}
+				
+				
 				
 			}
 
@@ -110,6 +117,7 @@ public class ResultInternshipController {
 				jsonObject.put("result_internship_name", resultInternshipForm.get(i).get("result_internship_name"));
 				jsonObject.put("time_reg", resultInternshipForm.get(i).get("time_reg"));
 				jsonObject.put("status", resultInternshipForm.get(i).get("status"));
+				jsonObject.put("type", resultInternshipForm.get(i).get("type"));
 
 				jsonArray.put(jsonObject);
 				
@@ -201,6 +209,37 @@ public class ResultInternshipController {
 		new EtcMethods().responseJSONArray(jsonArray, response);
 	}
 	
+	@RequestMapping(value = "/getResultInternshipType1FormName", method = RequestMethod.POST)
+	@ResponseBody
+	public void getResultInternshipType1FormName(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws JSONException, IOException {
+		response.setContentType("text/html;charset=UTF-8");
+		request.setCharacterEncoding("UTF-8");
+		
+		session = request.getSession(false);
+		EtcMethods etc = new EtcMethods();
+		int sessionStatus = etc.checkSession(session, request);
+		JSONArray jsonArray = new JSONArray();
+		ArrayList<HashMap<String, Object>> resultInternshipForm = null;
+		JSONObject jsonObject = null;
+		
+		if(sessionStatus == 0 && session.getAttribute("role").toString().equals("2")) {
+			
+			resultInternshipForm = new ResultInternshipDAO().queryResultInternshipType1FormName(session.getAttribute("id").toString());
+			
+			for(int i = 0; i < resultInternshipForm.size(); i++) {
+				jsonObject = new JSONObject();
+				jsonObject.put("result_internship_id", resultInternshipForm.get(i).get("result_internship_id"));
+				jsonObject.put("result_internship_name", resultInternshipForm.get(i).get("result_internship_name"));
+
+				jsonArray.put(jsonObject);
+				
+			}
+			
+		}
+		
+		new EtcMethods().responseJSONArray(jsonArray, response);
+	}
+	
 	@RequestMapping(value = "/getCriterionFormById", method = RequestMethod.POST)
 	@ResponseBody
 	public void getCriterionFormById(HttpSession session, HttpServletRequest request,
@@ -252,16 +291,17 @@ public class ResultInternshipController {
 		
 		String criterion_data = request.getParameter("criterion_data");
 		String result_internship_id = request.getParameter("data3");
+		String result_internship_id_for_role_2 = request.getParameter("data4");
 		String std_internship_id = request.getParameter("std_internship_id");
 		String ip = request.getParameter("ip");
 		
 		JSONArray jsonArray = new JSONArray(criterion_data);
 		
-		if (criterion_data != null && !criterion_data.equals("") && result_internship_id != null && !result_internship_id.equals("") && std_internship_id != null && !std_internship_id.equals("") && ip != null && !ip.equals("")) {
+		if (criterion_data != null && !criterion_data.equals("") && result_internship_id != null && !result_internship_id.equals("") && std_internship_id != null && !std_internship_id.equals("") && ip != null && !ip.equals("") && result_internship_id_for_role_2 != null && !result_internship_id_for_role_2.equals("")) {
 
 			if (sessionStatus == 0 && session.getAttribute("role").toString().equals("2")) {
 				
-				HashMap<String, Object> data = new AssessmentInternshipDAO().checkAssessmentInternshipExist(std_internship_id, result_internship_id);
+				HashMap<String, Object> data = new AssessmentInternshipDAO().checkAssessmentInternshipExist(std_internship_id, result_internship_id_for_role_2);
 				
 				if(data.size() != 0) {
 					
@@ -297,8 +337,9 @@ public class ResultInternshipController {
 			} else {
 				
 				int assessmentInternshipLastId = new AssessmentInternshipDAO().insertAssessmentInternship(result_internship_id, std_internship_id);
+				int assessmentInternshipLastIdForRole2 = new AssessmentInternshipDAO().insertAssessmentInternship(result_internship_id_for_role_2, std_internship_id);
 				
-				if(assessmentInternshipLastId > 0) {
+				if(assessmentInternshipLastId > 0 && assessmentInternshipLastIdForRole2 > 0) {
 					
 					int insertStatus = -1;
 					
@@ -309,6 +350,8 @@ public class ResultInternshipController {
 					}
 					
 					if(insertStatus != -1) {
+						
+						new AssessmentInternshipDAO().updateStatusAssessmentInternship(Integer.toString(assessmentInternshipLastId));
 						
 						status = "ประเมินการฝึกงานสำเร็จ";
 						alert = "1";

@@ -412,13 +412,14 @@ $(function() {
 		var result_internship_id = document.getElementById('result_internship_id').value
 		var std_internship_id = document.getElementById('std_internship_id').value
 		var ip = data.ip
+		var data3 = '1'
 		
 		if(criterion_data.length != 0 && result_internship_id != '' && std_internship_id != '' && ip != '') {
 			
 			axios({
 				  method: "post",
 				  url: "insertAssessmentByInternship",
-				  data: "criterion_data="+JSON.stringify(criterion_data)+"&data3="+result_internship_id+"&std_internship_id="+std_internship_id+"&ip="+ip,
+				  data: "criterion_data="+JSON.stringify(criterion_data)+"&data4="+result_internship_id+"&std_internship_id="+std_internship_id+"&ip="+ip+"&data3="+data3,
 				})
 				  .then(function (response) {
 					  

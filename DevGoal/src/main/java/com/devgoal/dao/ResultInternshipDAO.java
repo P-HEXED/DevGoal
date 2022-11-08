@@ -11,10 +11,10 @@ public class ResultInternshipDAO implements DAO<ResultInternshipModel>{
 	
 	Database db = new  Database();
 	
-	public int insertResultInternship(String user_id, String result_internship_name) {
+	public int insertResultInternship(String user_id, String result_internship_name, String type) {
 		
-		String sql = "INSERT INTO result_internship(user_id, result_internship_name) VALUES(?, ?)";
-		String[] data = {user_id, result_internship_name};
+		String sql = "INSERT INTO result_internship(user_id, result_internship_name, type) VALUES(?, ?, ?)";
+		String[] data = {user_id, result_internship_name, type};
 		String[] lastId = {"result_internship_id"};
 		
 		return db.executeReturnLastId(sql, data, lastId);
@@ -22,18 +22,22 @@ public class ResultInternshipDAO implements DAO<ResultInternshipModel>{
 	
 	public ArrayList<HashMap<String, Object>> queryResultInternshipForm(String user_id) {
 		
-		String sql = "SELECT \n" +
-					"	result_internship_id,\n" +
-					"	result_internship_name,\n" +
-					"	time_reg,\n" +
-					"	\n" +
-					"CASE status\n" +
-					"	WHEN 0 THEN 'ไม่ผ่านการยืนยัน'\n" +
-					"	WHEN 1 THEN 'ยืนยันแล้ว'\n" +
-					"	WHEN 2 THEN 'รอการตรวจสอบ'\n" +
-					"END status\n" +
-					"FROM result_internship\n" +
-					"WHERE user_id = ?";
+		String sql = "SELECT  \n" +
+				"	result_internship_id, \n" +
+				"	result_internship_name, \n" +
+				"	time_reg, \n" +
+				"	 \n" +
+				"CASE status \n" +
+				"	WHEN 0 THEN 'ไม่ผ่านการยืนยัน' \n" +
+				"	WHEN 1 THEN 'ยืนยันแล้ว' \n" +
+				"	WHEN 2 THEN 'รอการตรวจสอบ' \n" +
+				"END status,\n" +
+				"CASE type\n" +
+				"	WHEN 1 THEN 'อาจารย์'\n" +
+				"	WHEN 2 THEN 'สถานที่ฝึกงาน'\n" +
+				"END AS type\n" +
+				"FROM result_internship \n" +
+				"WHERE user_id = ?";
 		String[] data = {user_id};
 		
 		return db.queryListWithPrepare(sql, data);
@@ -98,7 +102,22 @@ public class ResultInternshipDAO implements DAO<ResultInternshipModel>{
 					"	\n" +
 					"FROM result_internship\n" +
 					"INNER JOIN user ON user.user_id = result_internship.user_id\n" +
-					"WHERE result_internship.status = 1 AND result_internship.user_id = ?";
+					"WHERE result_internship.status = 1 AND result_internship.type = 2 AND result_internship.user_id = ?";
+		String[] data = {user_id};
+		
+		return db.queryListWithPrepare(sql, data);
+		
+	}
+	
+	public ArrayList<HashMap<String, Object>> queryResultInternshipType1FormName(String user_id) {
+		
+		String sql = "SELECT \n" +
+					"	result_internship.result_internship_id,\n" +
+					"	result_internship.result_internship_name\n" +
+					"	\n" +
+					"FROM result_internship\n" +
+					"INNER JOIN user ON user.user_id = result_internship.user_id\n" +
+					"WHERE result_internship.status = 1 AND result_internship.type = 1 AND result_internship.user_id = ?";
 		String[] data = {user_id};
 		
 		return db.queryListWithPrepare(sql, data);

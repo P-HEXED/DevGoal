@@ -85,7 +85,7 @@ public class ResultInternshipDetDAO implements DAO<ResultInternshipDetModel> {
 				"FROM result_internship_det \n" +
 				"INNER JOIN result_internship ON result_internship.result_internship_id = result_internship_det.result_internship_id \n" +
 				"INNER JOIN criterion ON criterion.criterion_id = result_internship_det.criterion_id \n" +
-				"WHERE result_internship.result_internship_id = ? AND result_internship.status = 1 AND result_internship.user_id = (SELECT user_id FROM user WHERE secret_code = ? LIMIT 1)";
+				"WHERE result_internship.result_internship_id = ? AND result_internship.type = 2 AND result_internship.status = 1 AND result_internship.user_id = (SELECT user_id FROM user WHERE secret_code = ? LIMIT 1)";
 		String[] data = {criterion_form_id, secret_code};
 		
 		return db.queryListWithPrepare(sql, data);
@@ -93,17 +93,22 @@ public class ResultInternshipDetDAO implements DAO<ResultInternshipDetModel> {
 	
 	public ArrayList<HashMap<String, Object>> queryCriterionFormRole2(String std_internship_id, String user_id) {
 		
-		String sql = "SELECT\n" +
-				"	result_internship.result_internship_id,\n" +
-				"	result_internship.result_internship_name,\n" +
-				"	criterion.criterion_id,   \n" +
-				"	criterion.detail,   \n" +
-				"	result_internship_det.input_type  \n" +
-				"	 \n" +
-				"FROM result_internship_det   \n" +
-				"INNER JOIN result_internship ON result_internship.result_internship_id = result_internship_det.result_internship_id   \n" +
-				"INNER JOIN criterion ON criterion.criterion_id = result_internship_det.criterion_id   \n" +
-				"WHERE result_internship.result_internship_id = (SELECT result_internship_id FROM assessment_internship WHERE student_place_of_internship_id = ?) AND result_internship.status = 1 AND result_internship.user_id = ?";
+		String sql = "SELECT \n" +
+				"	result_internship.result_internship_id, \n" +
+				"	result_internship.result_internship_name, \n" +
+				"	criterion.criterion_id,    \n" +
+				"	criterion.detail,    \n" +
+				"	result_internship_det.input_type   \n" +
+				"		\n" +
+				"FROM result_internship_det  \n" +
+				"  \n" +
+				"INNER JOIN result_internship ON result_internship.result_internship_id = result_internship_det.result_internship_id    \n" +
+				"INNER JOIN criterion ON criterion.criterion_id = result_internship_det.criterion_id    \n" +
+				"WHERE result_internship.result_internship_id = (SELECT assessment_internship.result_internship_id \n" +
+				"FROM assessment_internship \n" +
+				"INNER JOIN result_internship ON result_internship.result_internship_id = assessment_internship.result_internship_id\n" +
+				"WHERE assessment_internship.student_place_of_internship_id = ? AND result_internship.type = 1) \n" +
+				"AND result_internship.status = 1 AND result_internship.user_id = ? AND result_internship.type = 1";
 		String[] data = {std_internship_id, user_id};
 		
 		return db.queryListWithPrepare(sql, data);

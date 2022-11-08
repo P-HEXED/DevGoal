@@ -125,8 +125,14 @@
 								<br>
 								<div class="col-sm-12 col-md-6 col-lg-8">
 									<input type="hidden" id="internshiIdModal">
-									<p>เลือกแบบฟอร์มเกณฑ์การประเมิน</p>
+									<p>เลือกแบบฟอร์มเกณฑ์การประเมินสำหรับสถานที่ฝึกงาน</p>
 									<select class="form-select" id="criterionForm">
+									</select>
+								</div>
+								<hr>
+								<div class="col-sm-12 col-md-6 col-lg-8">
+									<p>เลือกแบบฟอร์มเกณฑ์การประเมินสำหรับอาจารย์</p>
+									<select class="form-select" id="criterionType1Form">
 									</select>
 								</div>
 							</div>
@@ -170,6 +176,27 @@ $(function() {
 				
 				$.each(response.data, function(i, data) {
 	               	$('#criterionForm').append($('<option value="' + response.data[i].result_internship_id + '">' + response.data[i].result_internship_name + '</option>'));
+	           });
+				
+			  })
+			  .catch(function (response) {
+				Swal.fire({
+				icon: 'error',
+				title: 'ไม่สามารถทำรายการได้ในขณะนี้',
+				showConfirmButton: false,
+				timer: 3000
+			})
+			  });
+		
+		axios({
+			  method: "post",
+			  url: "getResultInternshipType1FormName",
+			}).then(function (response) {
+				
+				$('#criterionType1Form').append($('<option value="0">เลือกแบบฟอร์มเกณฑ์การประเมิน</option>'));
+				
+				$.each(response.data, function(i, data) {
+	               	$('#criterionType1Form').append($('<option value="' + response.data[i].result_internship_id + '">' + response.data[i].result_internship_name + '</option>'));
 	           });
 				
 			  })
@@ -241,16 +268,19 @@ $(function() {
 		var e = document.getElementById("criterionForm");
 		var criterionFormId = e.options[e.selectedIndex].value;
 		
+		var d = document.getElementById("criterionType1Form");
+		var criterionType1FormId = d.options[d.selectedIndex].value;
+		
 		const data = $.getJSON('https://api.ipify.org?format=json', function(data){
 			
 		var ip = data.ip
 		
-		if(internshipId != '' && internshipEmail != '' && criterionFormId != '' && ip != '' && criterionFormId != '0') {
+		if(internshipId != '' && internshipEmail != '' && criterionFormId != '' && ip != '' && criterionFormId != '0' && criterionType1FormId != '' && criterionType1FormId != '0') {
 			
 			axios({
 				  method: "post",
 				  url: "sendAssessmentToInternship",
-				  data: "internship_id="+internshipId+"&internship_email="+internshipEmail+"&criterion_form_id="+criterionFormId+"&ip="+ip,
+				  data: "internship_id="+internshipId+"&internship_email="+internshipEmail+"&criterion_form_id="+criterionFormId+"&ip="+ip+"&criterionType1FormId="+criterionType1FormId,
 				}).then(function (response) {
 					
 					 if(response.data.alert == "1") {

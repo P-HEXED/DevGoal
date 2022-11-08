@@ -26,14 +26,16 @@
 </head>
 
 <body>
-<div class="ring">DEVGOAL<span class="loading"></span></div>
+	<div class="ring">
+		DEVGOAL<span class="loading"></span>
+	</div>
 	<main>
 		<nav class="navbar navbar-expand d-flex flex-column " id="sidebar">
-          <include src="resources/includeBody/role2/sidebar_admin.html"></include>
-        </nav>
-        <include src="resources/includeBody/role2/navbar_admin.html"></include>
-        
-        <section class="p-4 my-container">
+			<include src="resources/includeBody/role2/sidebar_admin.html"></include>
+		</nav>
+		<include src="resources/includeBody/role2/navbar_admin.html"></include>
+
+		<section class="p-4 my-container">
 			<button class="btn" id="menu-btn">
 				<i class="fa-solid fa-list"></i>
 			</button>
@@ -60,18 +62,19 @@
 							</div>
 						</div>
 						<button class="btn btn-primary" type="button"
-							onClick="insertCriterion()" id="insert_criterion" style="float: right;">บันทึกเกณฑ์การประเมิน</button>
-							
-							<div class="lds-roller" id="spinner" style="display: none;">
-								<div></div>
-								<div></div>
-								<div></div>
-								<div></div>
-								<div></div>
-								<div></div>
-								<div></div>
-								<div></div>
-							</div>
+							onClick="insertCriterion()" id="insert_criterion"
+							style="float: right;">บันทึกเกณฑ์การประเมิน</button>
+
+						<div class="lds-roller" id="spinner" style="display: none;">
+							<div></div>
+							<div></div>
+							<div></div>
+							<div></div>
+							<div></div>
+							<div></div>
+							<div></div>
+							<div></div>
+						</div>
 					</div>
 				</div>
 
@@ -79,22 +82,23 @@
 					<div class="abovetable ">
 						<h4>แก้ไขข้อมูลเกณฑ์การประเมินนิสิต/นักศึกษา</h4>
 					</div>
-					
+
 					<div class="table-overflow">
-					<table class="table  table-striped text-center" id="criterionTable">
-						<thead class="table-dark">
-							<tr>
-								<th>ชื่อเกณฑ์การประเมิน</th>
-								<th>คะแนนเต็ม</th>
-								<th>สถานะ</th>
-								<th>เวลาที่บันทึก</th>
-								<th></th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody id="criterionData">
-						</tbody>
-					</table>
+						<table class="table  table-striped text-center"
+							id="criterionTable">
+							<thead class="table-dark">
+								<tr>
+									<th>ชื่อเกณฑ์การประเมิน</th>
+									<th>คะแนนเต็ม</th>
+									<th>สถานะ</th>
+									<th>เวลาที่บันทึก</th>
+									<th></th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody id="criterionData">
+							</tbody>
+						</table>
 					</div>
 					<div class="lds-roller" id="spinner2" style="display: none;">
 						<div></div>
@@ -155,7 +159,7 @@
 									<button type="button" class="btn btn-danger"
 										data-bs-dismiss="modal" id="close_update_criterion">ยกเลิก</button>
 								</div>
-								
+
 								<div class="lds-roller" id="spinner1" style="display: none;">
 									<div></div>
 									<div></div>
@@ -247,6 +251,18 @@
 													</div>
 												</div>
 											</div>
+
+											<div class="row">
+
+												<div class="col-sm-12 col-md-12 col-lg-8">
+													<select class="form-select" id="formType">
+														<option value="0">กรุณาเลือกกลุ่มเป้าหมาย</option>
+														<option value="1">แบบฟอร์มสำหรับอาจารย์</option>
+														<option value="2">แบบฟอร์มสำหรับสถานที่ฝึกงาน</option>
+													</select>
+												</div>
+
+											</div>
 										</form>
 									</div>
 								</div>
@@ -256,7 +272,7 @@
 									<button type="button" class="btn btn-danger"
 										data-bs-dismiss="modal" id="close_insert_form">ยกเลิก</button>
 								</div>
-								
+
 								<div class="lds-roller" id="spinner3" style="display: none;">
 									<div></div>
 									<div></div>
@@ -277,20 +293,21 @@
 						<h4>แบบฟอร์มเกณฑ์การประเมินนิสิต/นักศึกษา</h4>
 					</div>
 					<div class="table-overflow">
-					<table class="table  table-striped text-center"
-						id="criterionFormTable">
-						<thead class="table-dark">
-							<tr>
-								<th>ชื่อแบบฟอร์มเกณฑ์การประเมิน</th>
-								<th>สถานะ</th>
-								<th>เวลาที่บันทึก</th>
-								<th></th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody id="criterionFormData">
-						</tbody>
-					</table>
+						<table class="table  table-striped text-center"
+							id="criterionFormTable">
+							<thead class="table-dark">
+								<tr>
+									<th>ชื่อแบบฟอร์มเกณฑ์การประเมิน</th>
+									<th>แบบฟอร์มสำหรับ</th>
+									<th>สถานะ</th>
+									<th>เวลาที่บันทึก</th>
+									<th></th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody id="criterionFormData">
+							</tbody>
+						</table>
 					</div>
 					<div class="lds-roller" id="spinner4" style="display: none;">
 						<div></div>
@@ -315,8 +332,7 @@
 								<div class="row">
 									<div class="col-lg-12 col-md-12 col-sm-12">
 										<form>
-											<div id="formDynamic">
-											</div>
+											<div id="formDynamic"></div>
 										</form>
 									</div>
 								</div>
@@ -446,36 +462,39 @@
 					    var newCell2 = document.createElement("td")
 					    var newCell3 = document.createElement("td")
 					    var newCell4 = document.createElement("td")
+					    var newCell5 = document.createElement("td")
 					    
 					    newCell0.innerHTML = "<p>"+response.data[i].result_internship_name+"</p>"
+					    newCell1.innerHTML = "<p>"+response.data[i].type+"</p>"
 					    
-					    var cell1 = ''
+					    var cell2 = ''
 						    
 					    if(response.data[i].status == "ไม่ผ่านการยืนยัน") {
 					    	
-					    	cell1 = "<span class='badge badge-danger rounded-pill d-inline'>"+response.data[i].status+"</span>"
+					    	cell2 = "<span class='badge badge-danger rounded-pill d-inline'>"+response.data[i].status+"</span>"
 					    	
 					    }else if(response.data[i].status == "ยืนยันแล้ว") {
 					    	
-					    	cell1 = "<span class='badge badge-success rounded-pill d-inline'>"+response.data[i].status+"</span>"
+					    	cell2 = "<span class='badge badge-success rounded-pill d-inline'>"+response.data[i].status+"</span>"
 					    	
 					    }else if(response.data[i].status == "รอการตรวจสอบ") {
 					    	
-					    	cell1 = "<span class='badge badge-warning rounded-pill d-inline'>"+response.data[i].status+"</span>"
+					    	cell2 = "<span class='badge badge-warning rounded-pill d-inline'>"+response.data[i].status+"</span>"
 					    	
 					    }
 					    
 					    
-					    newCell1.innerHTML = cell1
-					    newCell2.innerHTML = "<p>"+response.data[i].time_reg+"</p>"
-					    newCell3.innerHTML = "<button type='button' onClick='ShowCriterionFormModal(\""+ response.data[i].result_internship_id +"\")' class='btn btn-info' data-bs-toggle='modal' data-bs-target='#previewCriterionFormodal'>ดูตัวอย่างแบบฟอร์ม</button>"
-					    newCell4.innerHTML = "<button id='confirm_form' onClick='manegementCriterionFormStatus("+response.data[i].result_internship_id+", 1)' class='btn btn-success'>ยืนยัน</button><button onClick='manegementCriterionFormStatus("+response.data[i].result_internship_id+", 0)' class='btn btn-danger' id='cancel_form'>ปฏิเสธ</button>"
+					    newCell2.innerHTML = cell2
+					    newCell3.innerHTML = "<p>"+response.data[i].time_reg+"</p>"
+					    newCell4.innerHTML = "<button type='button' onClick='ShowCriterionFormModal(\""+ response.data[i].result_internship_id +"\")' class='btn btn-info' data-bs-toggle='modal' data-bs-target='#previewCriterionFormodal'>ดูตัวอย่างแบบฟอร์ม</button>"
+					    newCell5.innerHTML = "<button id='confirm_form' onClick='manegementCriterionFormStatus("+response.data[i].result_internship_id+", 1)' class='btn btn-success'>ยืนยัน</button><button onClick='manegementCriterionFormStatus("+response.data[i].result_internship_id+", 0)' class='btn btn-danger' id='cancel_form'>ปฏิเสธ</button>"
 					    
 					    newRow.append(newCell0)
 					    newRow.append(newCell1)
 					    newRow.append(newCell2)
 					    newRow.append(newCell3)
 					    newRow.append(newCell4)
+					    newRow.append(newCell5)
 					    document.getElementById("criterionFormData").appendChild(newRow)
 	            });
 	           
@@ -859,8 +878,9 @@ function insertCriterionForm() {
 		var criterion_data = getCriterionDatatable()
 		var ip = data.ip
 		var result_internship_name = document.getElementById('nameCriterionFormModal').value
+		var formType = document.getElementById('formType').value
 		
-		if(criterion_data.length != 0 && ip != '' && result_internship_name != '') {
+		if(criterion_data.length != 0 && ip != '' && result_internship_name != '' && formType != '' && formType != '0') {
 			
 		const data = $.getJSON('https://api.ipify.org?format=json', function(data){
 			
@@ -869,7 +889,7 @@ function insertCriterionForm() {
 			axios({
 				  method: "post",
 				  url: "insertInternshipCriterionForm",
-				  data: "criterion_data="+JSON.stringify(criterion_data)+"&ip="+ip+"&result_internship_name="+result_internship_name,
+				  data: "criterion_data="+JSON.stringify(criterion_data)+"&ip="+ip+"&result_internship_name="+result_internship_name+"&form_type="+formType,
 				}).then(function (response) {
 						if(response.data.alert == "1") {
 									  

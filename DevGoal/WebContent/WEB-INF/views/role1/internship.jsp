@@ -497,7 +497,7 @@ $('#insertYear').change(function() {
 				} else {
 					Swal.fire({
 						  icon: 'warning',
-						  title: 'กรุณาเลือกบริษัท',
+						  title: 'กรุณาเลือกปีการศึกษาและเทอม',
 						  showConfirmButton: false,
 						  timer: 3000
 						})

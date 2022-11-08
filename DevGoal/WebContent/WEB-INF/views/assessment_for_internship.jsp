@@ -356,6 +356,7 @@ $(function() {
 		
 		
 		var data3 = urlParams.get('data3')
+		var data4 = urlParams.get('data4')
 		var std_internship_id = document.getElementById('std_internship_id').value
 		var ip = data.ip
 		
@@ -364,7 +365,7 @@ $(function() {
 			axios({
 				  method: "post",
 				  url: "insertAssessmentByInternship",
-				  data: "criterion_data="+JSON.stringify(criterion_data)+"&data3="+data3+"&std_internship_id="+std_internship_id+"&ip="+ip,
+				  data: "criterion_data="+JSON.stringify(criterion_data)+"&data3="+data3+"&std_internship_id="+std_internship_id+"&ip="+ip+"&data4="+data4,
 				})
 				  .then(function (response) {
 					  

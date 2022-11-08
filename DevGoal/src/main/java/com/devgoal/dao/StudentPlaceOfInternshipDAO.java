@@ -285,25 +285,26 @@ public class StudentPlaceOfInternshipDAO implements DAO<StudentPlaceOfInternship
 	
 	public ArrayList<HashMap<String, Object>> queryStudentDataInternshipCompleteRole2(String internship_id, String user_id) {
 		
-		String sql = "SELECT	  \n" +
-				"	user.profile_image,  \n" +
-				"	user.firstname,  \n" +
-				"	user.lastname,  \n" +
-				"	university.name AS university_name,  \n" +
-				"	faculty.name AS faculty_name,  \n" +
-				"	course.name AS course_name,  \n" +
-				"	place_of_internship.name AS internship_name,  \n" +
-				"	student_place_of_internship.time_reg,  \n" +
-				"	student_place_of_internship.student_place_of_internship_id  \n" +
-				"		\n" +
-				"FROM student_place_of_internship  \n" +
-				"INNER JOIN user ON user.user_id = student_place_of_internship.user_id  \n" +
-				"INNER JOIN university ON university.university_id = user.university_id  \n" +
-				"INNER JOIN faculty ON faculty.faculty_id = user.faculty_id  \n" +
-				"INNER JOIN course ON course.course_id = user.course_id  \n" +
-				"INNER JOIN place_of_internship ON place_of_internship.place_of_internship_id = student_place_of_internship.place_of_internship_id  \n" +
-				"INNER JOIN assessment_internship ON assessment_internship.student_place_of_internship_id = student_place_of_internship.student_place_of_internship_id\n" +
-				"WHERE student_place_of_internship.status = 1 AND assessment_internship.status = 0 AND place_of_internship.place_of_internship_id = ? AND place_of_internship.user_id = ?";
+		String sql = "SELECT	   \n" +
+				"	user.profile_image,   \n" +
+				"	user.firstname,   \n" +
+				"	user.lastname,   \n" +
+				"	university.name AS university_name,   \n" +
+				"	faculty.name AS faculty_name,   \n" +
+				"	course.name AS course_name,   \n" +
+				"	place_of_internship.name AS internship_name,   \n" +
+				"	student_place_of_internship.time_reg,   \n" +
+				"	student_place_of_internship.student_place_of_internship_id   \n" +
+				"		 \n" +
+				"FROM student_place_of_internship   \n" +
+				"INNER JOIN user ON user.user_id = student_place_of_internship.user_id   \n" +
+				"INNER JOIN university ON university.university_id = user.university_id   \n" +
+				"INNER JOIN faculty ON faculty.faculty_id = user.faculty_id   \n" +
+				"INNER JOIN course ON course.course_id = user.course_id   \n" +
+				"INNER JOIN place_of_internship ON place_of_internship.place_of_internship_id = student_place_of_internship.place_of_internship_id   \n" +
+				"INNER JOIN assessment_internship ON assessment_internship.student_place_of_internship_id = student_place_of_internship.student_place_of_internship_id \n" +
+				"INNER JOIN result_internship ON result_internship.result_internship_id = assessment_internship.result_internship_id\n" +
+				"WHERE student_place_of_internship.status = 1 AND assessment_internship.status = 0 AND place_of_internship.place_of_internship_id = ? AND place_of_internship.user_id = ? AND result_internship.type = 1";
 		String[] data = {internship_id, user_id};
 		
 		return db.queryListWithPrepare(sql, data);

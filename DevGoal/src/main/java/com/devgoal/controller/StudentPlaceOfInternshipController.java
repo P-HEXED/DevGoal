@@ -506,9 +506,10 @@ public class StudentPlaceOfInternshipController {
 			String email = request.getParameter("internship_email");
 			String internship_id = request.getParameter("internship_id");
 			String criterion_form_id = request.getParameter("criterion_form_id");
+			String criterion_type_1_form_id = request.getParameter("criterionType1FormId");
 			
 			
-			if(ip != null && !ip.equals("") && email != null && !email.equals("") && internship_id != null && !internship_id.equals("") && criterion_form_id != null && !criterion_form_id.equals("")) {
+			if(ip != null && !ip.equals("") && email != null && !email.equals("") && internship_id != null && !internship_id.equals("") && criterion_form_id != null && !criterion_form_id.equals("") && !criterion_form_id.equals("0") && criterion_type_1_form_id != null && !criterion_type_1_form_id.equals("") && !criterion_type_1_form_id.equals("0")) {
 				
 				
 				String secret_code = new UserDAO().querySecretCodeByUserId(session.getAttribute("id").toString()).get("secret_code").toString();
@@ -517,7 +518,7 @@ public class StudentPlaceOfInternshipController {
 
 				if(!secret_code.equals("") && updateSendAssessmentStatus > 0) {
 					
-					etc.sendEmail(session.getAttribute("id").toString(), email, "กรุณาประเมินนิสิต/นักศึกษาฝึกงาน", "สามารถเข้าประเมินนิสิต/นักศึกษาได้ที่นี่ URL : "+url+"getStudentDataForAssessment/?data1="+secret_code+"&data2="+internship_id+"&data3="+criterion_form_id);
+					etc.sendEmail(session.getAttribute("id").toString(), email, "กรุณาประเมินนิสิต/นักศึกษาฝึกงาน", "สามารถเข้าประเมินนิสิต/นักศึกษาได้ที่นี่ URL : "+url+"getStudentDataForAssessment/?data1="+secret_code+"&data2="+internship_id+"&data3="+criterion_form_id+"&data4="+criterion_type_1_form_id);
 					status = "ส่งแบบฟอร์มการประเมินสำเร็จ";
 					alert = "1";
 				}
@@ -541,14 +542,15 @@ public class StudentPlaceOfInternshipController {
 		String secret_code = request.getParameter("data1");
 		String internship_id = request.getParameter("data2");
 		String criterion_form_id = request.getParameter("data3");
+		String criterion_type_1_form_id = request.getParameter("data4");
 		
-		if(secret_code != null && !secret_code.equals("") && internship_id != null && !internship_id.equals("") && criterion_form_id != null && !criterion_form_id.equals("")) {
+		if(secret_code != null && !secret_code.equals("") && internship_id != null && !internship_id.equals("") && criterion_form_id != null && !criterion_form_id.equals("") && criterion_type_1_form_id != null && !criterion_type_1_form_id.equals("")) {
 			
 			ArrayList<HashMap<String, Object>> intershipAndRole2Id = new StudentPlaceOfInternshipDAO().checkInternshipForAssessment(secret_code, internship_id);
 			
 			if(intershipAndRole2Id.size() != 0) {
 
-				return new ModelAndView("redirect:/assessmentForInternship?data1="+secret_code+"&data2="+internship_id+"&data3="+criterion_form_id);
+				return new ModelAndView("redirect:/assessmentForInternship?data1="+secret_code+"&data2="+internship_id+"&data3="+criterion_form_id+"&data4="+criterion_type_1_form_id);
 			}
 			
 				
@@ -564,8 +566,9 @@ public class StudentPlaceOfInternshipController {
 		String secret_code = request.getParameter("data1");
 		String internship_id = request.getParameter("data2");
 		String criterion_form_id = request.getParameter("data3");
+		String criterion_type_1_form_id = request.getParameter("data4");
 		
-		if(secret_code != null && !secret_code.equals("") && internship_id != null && !internship_id.equals("") && criterion_form_id != null && !criterion_form_id.equals("")) {
+		if(secret_code != null && !secret_code.equals("") && internship_id != null && !internship_id.equals("") && criterion_form_id != null && !criterion_form_id.equals("") && criterion_type_1_form_id != null && !criterion_type_1_form_id.equals("")) {
 			
 			ArrayList<HashMap<String, Object>> intershipAndRole2Id = new StudentPlaceOfInternshipDAO().checkInternshipForAssessment(secret_code, internship_id);
 			

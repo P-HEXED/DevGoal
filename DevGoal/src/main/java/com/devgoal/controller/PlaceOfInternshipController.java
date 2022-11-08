@@ -474,9 +474,14 @@ public void managementInternshipStatusByAdmin(HttpSession session, HttpServletRe
 				matchingIdList += ", ";
 			}
 			
-			matchingIdList = matchingIdList.substring(0, matchingIdList.length()-2);
+			if(!matchingIdList.equals("")) {
+				
+				matchingIdList = matchingIdList.substring(0, matchingIdList.length()-2);
+				placeOfInternshipNoMatching = new PlaceOfInternshipDAO().queryPlaceOfInternshipNoMatching(session.getAttribute("id").toString(), matchingIdList);
+			}
 			
-			placeOfInternshipNoMatching = new PlaceOfInternshipDAO().queryPlaceOfInternshipNoMatching(session.getAttribute("id").toString(), matchingIdList);
+			
+			
 			placeOfInternshipNoSkill = new PlaceOfInternshipDAO().queryPlaceOfInternshipNoSkill();
 			
 			
@@ -554,9 +559,15 @@ public void managementInternshipStatusByAdmin(HttpSession session, HttpServletRe
 					matchingIdList += ", ";
 				}
 				
-				matchingIdList = matchingIdList.substring(0, matchingIdList.length()-2);
 				
-				placeOfInternshipNoMatching = new PlaceOfInternshipDAO().queryPlaceOfInternshipNoMatchingByZone(session.getAttribute("id").toString(), zone_data, matchingIdList);
+				if(!matchingIdList.equals("")) {
+					
+					matchingIdList = matchingIdList.substring(0, matchingIdList.length()-2);
+					placeOfInternshipNoMatching = new PlaceOfInternshipDAO().queryPlaceOfInternshipNoMatchingByZone(session.getAttribute("id").toString(), zone_data, matchingIdList);
+				}
+				
+				
+				
 				placeOfInternshipNoSkill = new PlaceOfInternshipDAO().queryPlaceOfInternshipNoSkillByZone(zone_data);
 				
 				for(int i = 0; i < placeOfInternshipNoMatching.size(); i++) {
