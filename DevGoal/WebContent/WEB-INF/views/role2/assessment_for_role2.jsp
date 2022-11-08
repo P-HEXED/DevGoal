@@ -306,11 +306,11 @@ $(function() {
 						
 		             	if(response.data[i].input_type == 'ช่องเพิ่มข้อความ') {
 		             		
-		             		form += '<div class="row"><div class="col-sm-2 col-md-3 col-lg-2"><p>'+response.data[i].detail+'</p></div><div class="col-sm-3 col-md-3 col-lg-3"><div class="form-floating "><input type="text" class="form-control" id="criterionScore'+i+'" placeholder="คะแนน" > <label for="name">คะแนน</label></div></div></div><input type="hidden" id="criterionId'+i+'" value="'+response.data[i].criterion_id+'">'
+		             		form += '<div class="row"><div class="col-sm-2 col-md-3 col-lg-2"><p>'+response.data[i].detail+' (คะแนนเต็ม '+ response.data[i].score+')'+'</p></div><div class="col-sm-3 col-md-3 col-lg-3"><div class="form-floating "><input type="text" class="form-control" id="criterionScore'+i+'" placeholder="คะแนน" > <label for="name">คะแนน</label></div></div></div><input type="hidden" id="criterionId'+i+'" value="'+response.data[i].criterion_id+'">'
 		             		
 		             	} else if(response.data[i].input_type == 'ช่องเพิ่มตัวเลข') {
 		             		
-		             		form += '<div class="row"><div class="col-sm-2 col-md-3 col-lg-2"><p>'+response.data[i].detail+'</p></div><div class="col-sm-3 col-md-3 col-lg-3"><div class="form-floating "><input type="number" min="1" class="form-control" id="criterionScore'+i+'" placeholder="คะแนน" > <label for="name">คะแนน</label></div></div></div><input type="hidden" id="criterionId'+i+'" value="'+response.data[i].criterion_id+'">'
+		             		form += '<div class="row"><div class="col-sm-2 col-md-3 col-lg-2"><p>'+response.data[i].detail+' (คะแนนเต็ม '+ response.data[i].score+')'+'</p></div><div class="col-sm-3 col-md-3 col-lg-3"><div class="form-floating "><input type="number" min="1" class="form-control" id="criterionScore'+i+'" placeholder="คะแนน" > <label for="name">คะแนน</label></div></div></div><input type="hidden" id="criterionId'+i+'" value="'+response.data[i].criterion_id+'">'
 		             		
 		             	}
 		             	

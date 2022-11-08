@@ -81,7 +81,8 @@ public class ResultInternshipDetDAO implements DAO<ResultInternshipDetModel> {
 		String sql = "SELECT \n" +
 				"	criterion.criterion_id, \n" +
 				"	criterion.detail, \n" +
-				"	result_internship_det.input_type \n" +
+				"	result_internship_det.input_type, \n" +
+				"	criterion.score \n" +
 				"FROM result_internship_det \n" +
 				"INNER JOIN result_internship ON result_internship.result_internship_id = result_internship_det.result_internship_id \n" +
 				"INNER JOIN criterion ON criterion.criterion_id = result_internship_det.criterion_id \n" +
@@ -98,6 +99,7 @@ public class ResultInternshipDetDAO implements DAO<ResultInternshipDetModel> {
 				"	result_internship.result_internship_name, \n" +
 				"	criterion.criterion_id,    \n" +
 				"	criterion.detail,    \n" +
+				"	criterion.score,    \n" +
 				"	result_internship_det.input_type   \n" +
 				"		\n" +
 				"FROM result_internship_det  \n" +

@@ -22,21 +22,30 @@ public class AssessmentInternshipDetDAO implements DAO<AssessmentInternshipDetMo
 	
 	public ArrayList<HashMap<String, Object>> queryAssessmentScore(String assessment_internship_id) {
 		
-		String sql = "SELECT\n" +
-					"	result_internship.result_internship_name,\n" +
-					"	criterion.detail,\n" +
-					"	assessment_internship_det.score,\n" +
-					"	assessment_internship_det.condition\n" +
-					"	\n" +
-					"	\n" +
-					"FROM assessment_internship_det\n" +
-					"INNER JOIN criterion ON criterion.criterion_id = assessment_internship_det.criterion_id\n" +
-					"INNER JOIN assessment_internship ON assessment_internship.assessment_internship_id = assessment_internship_det.assessment_internship_id\n" +
-					"INNER JOIN result_internship ON result_internship.result_internship_id = assessment_internship.result_internship_id\n" +
-					"WHERE assessment_internship.status = 1 AND assessment_internship_det.assessment_internship_id = ?";
+		String sql = "SELECT  \n" +
+				"	result_internship.result_internship_name,  \n" +
+				"	criterion.detail,  \n" +
+				"	assessment_internship_det.score,  \n" +
+				"	assessment_internship_det.condition,\n" +
+				"	criterion.score AS full_score\n" +
+				"		\n" +
+				"		\n" +
+				"FROM assessment_internship_det  \n" +
+				"INNER JOIN criterion ON criterion.criterion_id = assessment_internship_det.criterion_id  \n" +
+				"INNER JOIN assessment_internship ON assessment_internship.assessment_internship_id = assessment_internship_det.assessment_internship_id  \n" +
+				"INNER JOIN result_internship ON result_internship.result_internship_id = assessment_internship.result_internship_id  \n" +
+				"WHERE assessment_internship.status = 1 AND assessment_internship.student_place_of_internship_id = ?";
 		String[] data = {assessment_internship_id};
 		
 		return db.queryListWithPrepare(sql, data);
+	}
+	
+	public HashMap<String, Object> queryStudentPlaceOfInternshipIdByAssessmentId(String assessment_id) {
+		
+		String sql = "SELECT student_place_of_internship_id FROM assessment_internship WHERE assessment_internship_id = ?";
+		String[] data = {assessment_id};
+		
+		return db.querySingleWithPrepare(sql, data);
 	}
 	
 	public HashMap<String, Object> queryStudentInternshipComplete(String user_id) {

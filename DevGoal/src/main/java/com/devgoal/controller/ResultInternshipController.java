@@ -264,6 +264,7 @@ public class ResultInternshipController {
 				jsonObject.put("criterion_id", criterionFormData.get(i).get("criterion_id"));
 				jsonObject.put("detail", criterionFormData.get(i).get("detail"));
 				jsonObject.put("input_type", criterionFormData.get(i).get("input_type"));
+				jsonObject.put("score", criterionFormData.get(i).get("score"));
 
 				jsonArray.put(jsonObject);
 			}
@@ -401,6 +402,7 @@ public class ResultInternshipController {
 					jsonObject.put("criterion_id", criterionFormData.get(i).get("criterion_id"));
 					jsonObject.put("detail", criterionFormData.get(i).get("detail"));
 					jsonObject.put("input_type", criterionFormData.get(i).get("input_type"));
+					jsonObject.put("score", criterionFormData.get(i).get("score"));
 					
 	
 					jsonArray.put(jsonObject);

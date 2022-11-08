@@ -458,7 +458,7 @@ public void managementInternshipStatusByAdmin(HttpSession session, HttpServletRe
 		ArrayList<HashMap<String, Object>> placeOfInternship = new ArrayList<HashMap<String,Object>>();
 		
 		ArrayList<HashMap<String, Object>> placeOfInternshipMatching = null;
-		ArrayList<HashMap<String, Object>> placeOfInternshipNoMatching = null;
+		ArrayList<HashMap<String, Object>> placeOfInternshipNoMatching = new ArrayList<HashMap<String, Object>>();
 		ArrayList<HashMap<String, Object>> placeOfInternshipNoSkill = null;
 		JSONObject jsonObject = null;
 		
@@ -532,7 +532,7 @@ public void managementInternshipStatusByAdmin(HttpSession session, HttpServletRe
 		ArrayList<HashMap<String, Object>> placeOfInternship = new ArrayList<HashMap<String,Object>>();
 		
 		ArrayList<HashMap<String, Object>> placeOfInternshipMatching = null;
-		ArrayList<HashMap<String, Object>> placeOfInternshipNoMatching = null;
+		ArrayList<HashMap<String, Object>> placeOfInternshipNoMatching = new ArrayList<HashMap<String, Object>>();
 		ArrayList<HashMap<String, Object>> placeOfInternshipNoSkill = null;
 		JSONObject jsonObject = null;
 		String zone = request.getParameter("zone_value");

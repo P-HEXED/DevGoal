@@ -145,12 +145,18 @@
 										<div id="formDynamic"></div>
 									</form>
 								</div>
+							</div>
+							<h6 id="criterionScore1Modal" style="color: red;"></h6>
+							<hr>
+							<h5 id="criterionNameModal2"></h5>
+							<div class="row">
 								<div class="col-lg-6 col-md-6 col-sm-6">
 									<form>
 										<div id="formDynamic2"></div>
 									</form>
 								</div>
 							</div>
+							<h6 id="criterionScore2Modal" style="color: red;"></h6>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-danger"
 									data-bs-dismiss="modal">ปิด</button>
@@ -277,15 +283,25 @@ $(function() {
 				var condition_1 = ''
 				var condition_2 = ''
 				
+				var criterion_name1 = ''
+				var criterion_name2 = ''
+				
+				var total_score1 = 0
+				var total_score2 = 0
+				
 				$.each(response.data, function(i, data) {
 					
 					if(response.data[i].condition == '1') {
 						
-						condition_1 += '<div class="row"><div class="col-sm-6 col-md-6 col-lg-6"><p>'+response.data[i].detail+'</p></div><div class="col-sm-6 col-md-6 col-lg-6"><div class="form-floating "><input type="text" class="form-control" placeholder="คะแนน(อาจารย์)" value="'+response.data[i].score+'" disabled> <label for="name">คะแนน(อาจารย์)</label></div></div></div>'
-						
+						condition_1 += '<div class="row"><div class="col-sm-6 col-md-6 col-lg-6"><p>'+response.data[i].detail+' (คะแนนเต็ม '+ response.data[i].full_score+')'+'</p></div><div class="col-sm-6 col-md-6 col-lg-6"><div class="form-floating "><input type="text" class="form-control" placeholder="คะแนน(อาจารย์)" value="'+response.data[i].score+'" disabled> <label for="name">คะแนน(อาจารย์)</label></div></div></div>'
+						criterion_name1 = response.data[i].result_internship_name
+						total_score1 += parseInt(response.data[i].score)
+							
 					} else if(response.data[i].condition == '2') {
 						
-						condition_2 += '<div class="row"><div class="col-sm-6 col-md-6 col-lg-6"><p>'+response.data[i].detail+'</p></div><div class="col-sm-6 col-md-6 col-lg-6"><div class="form-floating "><input type="text" class="form-control" placeholder="คะแนน(อาจารย์)" value="'+response.data[i].score+'" disabled> <label for="name">คะแนน(สถานที่ฝึกงาน)</label></div></div></div>'
+						condition_2 += '<div class="row"><div class="col-sm-6 col-md-6 col-lg-6"><p>'+response.data[i].detail+' (คะแนนเต็ม '+ response.data[i].full_score+')'+'</p></div><div class="col-sm-6 col-md-6 col-lg-6"><div class="form-floating "><input type="text" class="form-control" placeholder="คะแนน(อาจารย์)" value="'+response.data[i].score+'" disabled> <label for="name">คะแนน(สถานที่ฝึกงาน)</label></div></div></div>'
+						criterion_name2 = response.data[i].result_internship_name
+						total_score2 += parseInt(response.data[i].score)
 						
 					}
 				});
@@ -293,10 +309,12 @@ $(function() {
 				document.getElementById('formDynamic').innerHTML = condition_1
 				document.getElementById('formDynamic2').innerHTML = condition_2
 				
-				document.getElementById('criterionNameModal').innerHTML = '<h5>'+response.data[0].result_internship_name+'</h5>'
+				document.getElementById('criterionNameModal').innerHTML = '<h5> เกณฑ์ที่อาจารย์ใช้ทำการประเมิน : '+criterion_name1+'</h5>'
+				document.getElementById('criterionNameModal2').innerHTML = '<h5> เกณฑ์ที่สถานที่ฝึกงานใช้ทำการประเมิน : '+criterion_name2+'</h5>'
 				
-					
-					
+				document.getElementById('criterionScore1Modal').innerHTML = 'รวมคะแนน : '+total_score1
+				document.getElementById('criterionScore2Modal').innerHTML = 'รวมคะแนน : '+total_score2
+			
 			})
 				
 			  .catch(function (response) {

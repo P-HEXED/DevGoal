@@ -66,16 +66,23 @@ public class AssessmentInternshipController {
 		
 			if(assessment_internship_id != null && !assessment_internship_id.equals("")) {
 				
-				ArrayList<HashMap<String, Object>> assessmentScore = new AssessmentInternshipDetDAO().queryAssessmentScore(assessment_internship_id);
+				HashMap<String, Object> std_internship_id = new AssessmentInternshipDetDAO().queryStudentPlaceOfInternshipIdByAssessmentId(assessment_internship_id);
 				
-				for (int i = 0; i < assessmentScore.size(); i++) {
-					jsonObject = new JSONObject();
-					jsonObject.put("result_internship_name", assessmentScore.get(i).get("result_internship_name"));
-					jsonObject.put("condition", assessmentScore.get(i).get("condition"));
-					jsonObject.put("detail", assessmentScore.get(i).get("detail"));
-					jsonObject.put("score", assessmentScore.get(i).get("score"));
-	
-					jsonArray.put(jsonObject);
+				if(std_internship_id != null) {
+					
+					ArrayList<HashMap<String, Object>> assessmentScore = new AssessmentInternshipDetDAO().queryAssessmentScore(std_internship_id.get("student_place_of_internship_id").toString());
+					
+					for (int i = 0; i < assessmentScore.size(); i++) {
+						jsonObject = new JSONObject();
+						jsonObject.put("result_internship_name", assessmentScore.get(i).get("result_internship_name"));
+						jsonObject.put("condition", assessmentScore.get(i).get("condition"));
+						jsonObject.put("detail", assessmentScore.get(i).get("detail"));
+						jsonObject.put("score", assessmentScore.get(i).get("score"));
+						jsonObject.put("full_score", assessmentScore.get(i).get("full_score"));
+		
+						jsonArray.put(jsonObject);
+					}
+					
 				}
 				
 			}
