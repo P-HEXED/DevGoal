@@ -64,7 +64,7 @@
                 
                 <div class="col col-sm-6 col-md-6 col-lg-3">
                 	<select class="form-select" id="zone">
-                		<option>จัดเรียงตามภูมิภาค</option>
+                		<option value="0">จัดเรียงตามภูมิภาค</option>
 						<option value="1">ภาคเหนือ</option>
 						<option value="2">ภาคตะวันออกเฉียงเหนือ</option>
 						<option value="3">ภาคกลาง</option>
@@ -413,7 +413,7 @@ $(function() {
 		var e = document.getElementById("zone");
 		var zone_value = e.options[e.selectedIndex].value;
 		
-		if(zone_value != '') {
+		if(zone_value != '' && zone_value != '0') {
 			
 			axios({
 				  method: "post",
@@ -490,6 +490,82 @@ $(function() {
 						  timer: 3000
 						})
 				  });
+		} else if(zone_value == '0') {
+			
+			axios({
+				  method: "post",
+				  url: "findOverseasWorkPlaceBySkill",
+				}).then(function (response) {
+					
+					$("#userDataTable").DataTable().clear().draw();
+			        $("#userDataTable").dataTable().fnDestroy();
+					
+					$.each(response.data, function(i, data) {
+						
+							var newRow = document.createElement("tr")
+							var newCell0 = document.createElement("td")
+						    var newCell1 = document.createElement("td")
+						    var newCell2 = document.createElement("td")
+						    var newCell3 = document.createElement("td")
+						    var newCell4 = document.createElement("td")
+						    var newCell5 = document.createElement("td")
+						    
+						    var matching = ''
+						    
+						    if(response.data[i].matching == "1") {
+						    	
+						    	matching = '<span style="color: blue; font-size: 15px;">(ทักษะความสามารถตรงกับคุณ)</span>'
+						    	
+						    }
+						    
+						    newCell0.innerHTML = "<p>"+response.data[i].name+"</p>"+matching
+						    newCell1.innerHTML = "<p>"+response.data[i].email+"</p>"
+						    newCell2.innerHTML = "<p>"+response.data[i].province+"</p>"
+						    newCell4.innerHTML = "<p>"+response.data[i].time_reg+"</p>"
+						    
+						    var cell3 = ''
+							    
+						    if(response.data[i].type == "ในประเทศ") {
+						    	
+						    	cell3 = "<span class='badge badge-success rounded-pill d-inline'>"+response.data[i].type+"</span>"
+						    	
+						    }else if(response.data[i].type == "ต่างประเทศ") {
+						    	
+						    	cell3 = "<span class='badge badge-warning rounded-pill d-inline'>"+response.data[i].type+"</span>"
+						    	
+						    }
+						    
+						    
+						    
+						    newCell3.innerHTML = cell3
+						    
+						    
+						    newCell5.innerHTML = "<button onClick='showModal(\""+response.data[i].name+"\",\""+ response.data[i].email+"\",\""+ response.data[i].type+"\",\""+ response.data[i].time_reg+"\",\""+response.data[i].address+"\",\""+response.data[i].phone+"\",\""+response.data[i].recive_total+"\",\""+response.data[i].overseas_work_place_id+"\",\""+response.data[i].user_id+"\",\""+response.data[i].province+"\")' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#sendnotify'>รายละเอียด</button>"
+						    
+						    newRow.append(newCell0)
+						    newRow.append(newCell1)
+						    newRow.append(newCell2)
+						    newRow.append(newCell3)
+						    newRow.append(newCell4)
+						    newRow.append(newCell5)
+						    document.getElementById("userData").appendChild(newRow)
+						    
+		            });
+					
+					$('#userDataTable').dataTable( {
+						"aaSorting": []
+					}); 
+						
+				  })
+				  .catch(function (response) {
+					  Swal.fire({
+						  icon: 'error',
+						  title: 'ไม่สามารถทำรายการได้ในขณะนี้',
+						  showConfirmButton: false,
+						  timer: 3000
+						})
+				  });
+			
 		}
 		
 	});
