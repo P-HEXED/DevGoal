@@ -158,10 +158,10 @@ body {
 					</div>
 				</div>
 				<div class="col-lg-1 col-md-1 col-sm-12"></div>
-				<div class="col-lg-9 col-md-6 col-sm-12">
+				<div class="col-lg-9 col-md-12 col-sm-12">
 					<div class="card stat-card px-4">
 						<div class="row d-flex justify-content-around text-center gx-5">
-							<div class="col-lg-7">
+							<div class="col-lg-9 col-md-12 col-sm-12">
 								<canvas id="barChart"></canvas>
 							</div>
 						</div>
@@ -220,7 +220,7 @@ $(function() {
 			
 			var xValues = []
 			var yValues = []
-			var barColors = [ "#009BFF", "#FF0000", "#FFDC00", "#00FFBD", "#FF0087", "#8F00FF", "#00FF0C", "F3FF00" ]
+			var barColors = [ "#009BFF", "#FF0000", "#FFDC00", "#00FFBD", "#FF0087", "#8F00FF", "#00FF0C", "F3FF00", "#009BFF", "#FF0000", "#FFDC00", "#00FFBD", "#FF0087", "#8F00FF", "#00FF0C", "F3FF00", "#009BFF", "#FF0000", "#FFDC00", "#00FFBD", "#FF0087", "#8F00FF", "#00FF0C", "F3FF00", "#009BFF", "#FF0000", "#FFDC00", "#00FFBD", "#FF0087", "#8F00FF", "#00FF0C", "F3FF00" ]
 			
 			$.each(response.data, function(i, data) {
 				
