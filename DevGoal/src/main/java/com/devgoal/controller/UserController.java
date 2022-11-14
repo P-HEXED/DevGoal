@@ -2266,7 +2266,7 @@ public class UserController extends HttpServlet {
 			String user_id = session.getAttribute("id").toString();
 			
 			HashMap<String, Object> userDataRole1 = new UserDAO().queryUserDataRole1(user_id);
-			HashMap<String, Object> placesData = new UserDAO().queryPlacesDataRole1(user_id);
+			HashMap<String, Object> placesData = new UserDAO().queryHomeRole1(user_id);
 				
 			jsonObject = new JSONObject();
 			jsonObject.put("profile_image", userDataRole1.get("profile_image"));
@@ -2276,10 +2276,9 @@ public class UserController extends HttpServlet {
 			jsonObject.put("faculty_name", userDataRole1.get("faculty_name"));
 			jsonObject.put("course_name", userDataRole1.get("course_name"));
 			
-			jsonObject.put("internship_request_student", placesData.get("internship_request_student"));
-			jsonObject.put("overseas_request_student", placesData.get("overseas_request_student"));
-			jsonObject.put("internship_now", placesData.get("internship_now"));
-			jsonObject.put("overseas_now", placesData.get("overseas_now"));
+			jsonObject.put("internship_name", placesData.get("internship_name"));
+			jsonObject.put("address", placesData.get("address"));
+			jsonObject.put("phone", placesData.get("phone"));
 			
 			jsonArray.put(jsonObject);
 				

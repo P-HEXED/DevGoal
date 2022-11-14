@@ -126,7 +126,7 @@ body {
 
 			<div class="row">
 
-				<div class="col-lg-3 offset-lg-6 col-sm-12 col-md-6">
+				<!-- <div class="col-lg-3 offset-lg-6 col-sm-12 col-md-6">
 					<div class="card" id="smallcard03">
 						<div class="card-body" style="height: 10px;">
 							<div class="row">
@@ -148,7 +148,7 @@ body {
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> -->
 
 			<br>
 			
@@ -219,8 +219,8 @@ $(function() {
 			document.getElementById('facultyCard').innerHTML = response.data.faculty_name
 			document.getElementById('courseCard').innerHTML = response.data.course_name
 			
-			document.getElementById('userStatus1').innerHTML = 'นิสิต/นักศึกษาที่สนใจบริษัทของคุณ '+response.data.student_request+' คน'
-			document.getElementById('userStatus2').innerHTML = 'สถานที่ฝึกงานที่ร้องขอนิสิตฝึกงาน '+response.data.internship_request+' บริษัท'
+			/* document.getElementById('userStatus1').innerHTML = 'นิสิต/นักศึกษาที่สนใจบริษัทของคุณ '+response.data.student_request+' คน'
+			document.getElementById('userStatus2').innerHTML = 'สถานที่ฝึกงานที่ร้องขอนิสิตฝึกงาน '+response.data.internship_request+' บริษัท' */
 			
 		  })
 		  .catch(function (response) {

@@ -47,12 +47,12 @@
 					</div>
 					<div class="card-body">
 						<div class="row">
-							<div class="col-lg-5 col-md-8 col-sm-1">
+							<div class="col-lg-5 col-md-8 col-sm-12">
 								<p id="name">ชื่อเกณฑ์การประเมิน</p>
 								<input type="text" class="form-control"
 									placeholder="ชื่อเกณฑ์การประเมิน" id="nameCriterion">
 							</div>
-							<div class="col-lg-2 col-md-4 col-sm-1">
+							<div class="col-lg-2 col-md-4 col-sm-12">
 								<p id="name">คะแนนเต็ม</p>
 								<div class="input-group mb-3">
 									<input type="number" class="form-control"

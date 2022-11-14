@@ -116,7 +116,7 @@ body {
 			<br> <br>
 
 			<div class="row">
-			<div class="col-lg-6 col-md-6 col-sm-12">
+			<div class="col-lg-3 col-md-6 col-sm-12">
 				<div class="col-lg-12 col-md-12 col-sm-12">
 					<div class="card profile-card align-items-center" style="width: 15rem;">
 						<img id="profileImage" class="rounded-circle mx-0 auto"
@@ -133,7 +133,7 @@ body {
 					</div>
 				</div>
 				</div>
-			<div class="col-lg-6 col-md-6 col-sm-12">
+			<!-- <div class="col-lg-6 col-md-6 col-sm-12">
 				<div class="col-lg-12 col-sm-12 col-md-12">
 					<div class="card" id="smallcard03">
 						<div class="card-body" style="height: 10px;">
@@ -157,23 +157,41 @@ body {
 						</div>
 					</div>
 				</div>
-				</div>
+				</div> -->
 			<br>
-				<div class="col-lg-12 col-md-12 col-sm-12">
+				<div class="col-lg-9 col-md-12 col-sm-12">
 					<div class="card stat-card px-4">
-						<h4>สถานะการฝึกงาน/ทำงาน</h4>
+						<h4>สถานะการฝึกงาน</h4>
 						<div class="row d-flex justify-content-around text-center gx-5">
-							<div class="col-sm-12 col-md-5 col-lg-5">
+							<div class="col-sm-12 col-md-6 col-lg-6">
 								<div class="row mt-5">
 									<div class="col-sm-12 col-md-4 col-lg-4">
-										<label for="name">เคยฝึกงานอยู่ที่</label>
+										<label for="name">กำลังฝึกงานอยู่ที่</label>
 									</div>
 									<div class="col-sm-12 col-md-8 col-lg-8">
 										<input id="internship_now" type="text" disabled="true"
 											class="form-control">
 									</div>
 								</div>
-								<div class="row mt-4">
+								<div class="row mt-5">
+									<div class="col-sm-12 col-md-4 col-lg-4">
+										<label for="name">ที่อยู่สถานที่ฝึกงาน</label>
+									</div>
+									<div class="col-sm-12 col-md-8 col-lg-8">
+										<input id="address_data" type="text" disabled="true"
+											class="form-control">
+									</div>
+								</div>
+								<div class="row mt-5">
+									<div class="col-sm-12 col-md-4 col-lg-4">
+										<label for="name">เบอร์โทรที่ฝึกงาน</label>
+									</div>
+									<div class="col-sm-12 col-md-8 col-lg-5">
+										<input id="phone_data" type="text" disabled="true"
+											class="form-control">
+									</div>
+								</div>
+								<!-- <div class="row mt-4">
 									<div class="col-sm-12 col-md-4 col-lg-4">
 										<label for="name">กำลังทำงานอยู่ที่</label>
 									</div>
@@ -181,9 +199,9 @@ body {
 										<input id="overseas_now" type="text" disabled="true"
 											class="form-control">
 									</div>
-								</div>
+								</div> -->
 							</div>
-							<div class=" col-sm-12 col-md-7 col-lg-7">
+							<div class=" col-sm-12 col-md-6 col-lg-6">
 								<canvas id="polarArea"></canvas>
 								<p>1 = ระดับเริ่มต้น, 2 = ระดับปานกลาง, 3 = ระดับชำนาญ</p>
 							</div>
@@ -225,25 +243,41 @@ $(function() {
 			document.getElementById('courseCard').innerHTML = response.data.course_name
 			
 			
-			if(response.data.internship_now == undefined) {
+			if(response.data.internship_name == undefined) {
 				
 				document.getElementById('internship_now').value = 'ไม่มีข้อมูล'
 			} else {
 				
-				document.getElementById('internship_now').value = response.data.internship_now
+				document.getElementById('internship_now').value = response.data.internship_name
+			}
+			
+			if(response.data.address == undefined) {
+				
+				document.getElementById('address_data').value = 'ไม่มีข้อมูล'
+			} else {
+				
+				document.getElementById('address_data').value = response.data.address
+			}
+			
+			if(response.data.phone == undefined) {
+				
+				document.getElementById('phone_data').value = 'ไม่มีข้อมูล'
+			} else {
+				
+				document.getElementById('phone_data').value = response.data.phone
 			}
 			
 			
-			if(response.data.overseas_now == undefined) {
+			/* if(response.data.overseas_now == undefined) {
 				
 				document.getElementById('overseas_now').value = 'ไม่มีข้อมูล'
 			} else {
 				
 				document.getElementById('overseas_now').value = response.data.overseas_now
-			}
+			} */
 			
-			document.getElementById('userStatus1').innerHTML = 'จำนวนสถานที่ทำงานที่สนใจคุณ '+response.data.overseas_request_student+' บริษัท'
-			document.getElementById('userStatus2').innerHTML = 'จำนวนสถานที่ฝึกงานที่สนใจคุณ '+response.data.internship_request_student+' บริษัท'
+			/* document.getElementById('userStatus1').innerHTML = 'จำนวนสถานที่ทำงานที่สนใจคุณ '+response.data.overseas_request_student+' บริษัท'
+			document.getElementById('userStatus2').innerHTML = 'จำนวนสถานที่ฝึกงานที่สนใจคุณ '+response.data.internship_request_student+' บริษัท' */
 			
 		  })
 		  .catch(function (response) {

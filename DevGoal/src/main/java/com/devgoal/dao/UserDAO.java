@@ -956,6 +956,27 @@ public class UserDAO implements DAO<UserModel>{
 		return db.querySingleWithPrepare(sql, data);
 	}
 	
+	public HashMap<String, Object> queryHomeRole1(String user_id) {
+		
+		String sql = "SELECT   \n" +
+				"	place_of_internship.name AS internship_name,\n" +
+				"	place_of_internship.address,\n" +
+				"	place_of_internship.phone\n" +
+				"	\n" +
+				"	\n" +
+				"FROM student_place_of_internship  \n" +
+				"INNER JOIN place_of_internship ON place_of_internship.place_of_internship_id = student_place_of_internship.place_of_internship_id  \n" +
+				"WHERE student_place_of_internship.status = 1 \n" +
+				"AND student_place_of_internship.send_status = 1 \n" +
+				"AND student_place_of_internship.send_assessment_status = 0\n" +
+				"AND student_place_of_internship.user_id = ?\n" +
+				"ORDER BY student_place_of_internship.student_place_of_internship_id DESC LIMIT 1";
+		
+		String[] data = {user_id};
+		
+		return db.querySingleWithPrepare(sql, data);
+	}
+	
 	public HashMap<String, Object> queryUserDataRole3(String user_id) {
 		
 		String sql = "SELECT  \n" +
