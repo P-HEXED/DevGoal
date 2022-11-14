@@ -297,7 +297,7 @@ $(function() {
 			
 			var xValues = []
 			var yValues = []
-			var barColors = [ "#009BFF", "#FF0000", "#FFDC00", "#00FFBD", "#FF0087", "#8F00FF", "#00FF0C", "F3FF00" ]
+			var barColors = [ "#009BFF", "#FF0000", "#FFDC00", "#00FFBD", "#FF0087", "#8F00FF", "#00FF0C", "F3FF00","#009BFF", "#FF0000", "#FFDC00", "#00FFBD", "#FF0087", "#8F00FF", "#00FF0C", "F3FF00","#009BFF", "#FF0000", "#FFDC00", "#00FFBD", "#FF0087", "#8F00FF", "#00FF0C", "F3FF00","#009BFF", "#FF0000", "#FFDC00", "#00FFBD", "#FF0087", "#8F00FF", "#00FF0C", "F3FF00","#009BFF", "#FF0000", "#FFDC00", "#00FFBD", "#FF0087", "#8F00FF", "#00FF0C", "F3FF00","#009BFF", "#FF0000", "#FFDC00", "#00FFBD", "#FF0087", "#8F00FF", "#00FF0C", "F3FF00" ]
 			
 			$.each(response.data, function(i, data) {
 				
